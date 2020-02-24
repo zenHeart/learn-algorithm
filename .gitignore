@@ -2,3 +2,5 @@ node_modules
 todo.md
 .idea
 *.log
+_documents
+*.pdf

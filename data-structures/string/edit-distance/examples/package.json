@@ -1,0 +1,16 @@
+{
+  "name": "examples",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "debug": "node inspect index.js"
+  },
+  "keywords": [],
+  "author": "chengle297 <chengle297@163.com>",
+  "license": "ISC",
+  "dependencies": {
+    "didyoumean": "^1.2.1"
+  }
+}
