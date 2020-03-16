@@ -1,4 +1,4 @@
-const { calcAllResult, twoSum } = require('./index');
+const func = require('./index');
 const { expect } = require('chai');
 
 describe('1 two sum', function() {
@@ -7,26 +7,18 @@ describe('1 two sum', function() {
       {
         input: [[1, 2, 3], 3],
         expect: [0, 1]
-      }
-    ];
-    testData.forEach(ele => {
-      expect(twoSum(ele.input[0], ele.input[1])).deep.eq(ele.expect);
-    });
-  });
-  it('calcAllResult', function() {
-    let testData = [
+      },
       {
-        input: [1, 2, 3],
-        expect: {
-          3: [0, 1],
-          4: [0, 2],
-          5: [1, 2]
-        }
+        input: [[0, 4, 3, 0], 0],
+        expect: [0, 3]
+      },
+      {
+        input: [[-3, 4, 3, 90], 0],
+        expect: [0, 2]
       }
     ];
-
     testData.forEach(ele => {
-      expect(calcAllResult(ele.input)).deep.eq(ele.expect);
+      expect(func(ele.input[0], ele.input[1])).deep.eq(ele.expect);
     });
   });
 });

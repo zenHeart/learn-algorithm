@@ -1,11 +1,6 @@
-[two sum ](https://leetcode.com/problems/two-sum/description/)
+# [两数之和](https://leetcode.com/problems/two-sum/description/)
 
-
-**两数之和**
-
-------
-
-## 思考过程
+## 题解
 包含如下限制:
 * 类型为整数
 * 数组必须有解
@@ -26,4 +21,6 @@ res = {
 
 
 
-## 答案解析
+## 易错点
+1. 两个链表长度不同时的处理
+2. 链表循环结束后存在进位需额外添加节点。
