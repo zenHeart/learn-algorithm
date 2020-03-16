@@ -24,7 +24,6 @@ describe('longest-common-prefix', function() {
       let expectRes = createListWithArray(data[1]);
 
       let res = func(l1, l2);
-      console.log(res, expectRes);
       expect(res).to.deep.eq(expectRes);
     });
   }
