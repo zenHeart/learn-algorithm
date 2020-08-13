@@ -1,0 +1,28 @@
+const func = require('./index');
+const { expect } = require('chai');
+
+describe('two-sum-ii-input-array-is-sorted', function() {
+  let testData = {
+    empty: [[[], 0], []],
+    value1: [
+      [[2, 7, 11, 15], 9],
+      [1, 2]
+    ],
+    value2: [
+      [[-3, 2, 7, 11, 15], 4],
+      [1, 3]
+    ],
+    value3: [
+      [[0, 0, 3, 4], 0],
+      [1, 2]
+    ]
+  };
+  for (let unitTestName in testData) {
+    it(unitTestName, function() {
+      let data = testData[unitTestName];
+
+      let res = func(data[0][0], data[0][1]);
+      expect(res).to.deep.eq(data[1]);
+    });
+  }
+});

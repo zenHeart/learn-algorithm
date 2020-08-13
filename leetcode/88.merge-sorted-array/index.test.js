@@ -1,7 +1,7 @@
 const func = require('./index');
 const { expect } = require('chai');
 
-describe('remove-duplicates-from-sorted-list', function() {
+describe.skip('remove-duplicates-from-sorted-list', function() {
   let testData = {
     empty: [
       [
