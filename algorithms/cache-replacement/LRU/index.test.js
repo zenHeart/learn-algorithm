@@ -28,13 +28,19 @@ describe('lru test', function () {
       1: 2,
       2: 2
     });
-
     lru.add(3, 2);
     expect(lru.cache).to.deep.eq({
         2: 2,
         3: 2
-      });
+    });
     expect(lru._index).to.deep.eq([ 3, 2]);
+    lru.add(4, 4)
+    lru.add(3, 3);
+    expect(lru.cache).to.deep.eq({
+        3: 3,
+        4: 4
+    });
+    expect(lru._index).to.deep.eq([ 3, 4]);
   });
   it('get update index', function () {
     let lru = new LRU(2);
