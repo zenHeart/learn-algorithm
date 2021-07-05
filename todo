@@ -3,6 +3,8 @@ todo:
 	☐ 最长公共子序列实现,查找两个字符串中匹配的最长子序列
 	☐ [awosem algtothyme](https://github.com/apachecn/awesome-algorithm)
 	☐ 素数检查 https://coolshell.cn/articles/3738.html
+	☐ 算法范式 https://en.wikipedia.org/wiki/Algorithmic_paradigm
+	
 
 数据结构:
 	* 补充测试用例
@@ -10,3 +12,10 @@ todo:
 backlog:
 	☐ 实际问题向抽象数据结构的转换思想
 
+数学运算:
+  ☐ [逻辑等价公式](http://www.icourse163.org/learn/PKU-1002525004?tid=1003290008#/learn/content?type=detail&id=1004623431&cid=1005844755&replay=true)
+  ☐ [重言式替换原理](http://www.icourse163.org/learn/PKU-1002525004?tid=1003290008#/learn/content?type=detail&id=1004623431&cid=1005844756&replay=true)
+
+
+树:
+  ☐ 只有根节点是满二叉树么

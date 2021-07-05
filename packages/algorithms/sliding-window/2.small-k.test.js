@@ -36,7 +36,7 @@ let testData = {
    ],
 }
 
-describe('small in sub k array', function () {
+describe.skip('small in sub k array', function () {
   let testKeys = Object.keys(testData);
   testKeys.forEach(key => {
     it(key, function() {
