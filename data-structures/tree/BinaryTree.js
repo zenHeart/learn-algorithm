@@ -8,14 +8,14 @@ class BinaryTreeNode {
   lc;
   // 右节点信息
   rc;
-  constructor(val,left,right) {
+  constructor(val, left, right) {
     this.val = val
     this.lc = left
     this.rc = right
   }
   // 判断是否为叶子节点
   isLeaf() {
-    return !this.lc && !this.rc;  
+    return !this.lc && !this.rc;
   }
 }
 
@@ -24,14 +24,14 @@ class BinaryTree {
   root;
   // 父节点 parent
   parent
-  
+
   constructor(root) {
     this.root = root
   }
- 
+
   // 创建新的左右子树
   createTree(leftTree, rightTree) {
-    
+
   }
 
   // 删除节点
