@@ -3,10 +3,10 @@
  * @param {string} b
  * @return {string}
  */
-var addBinary = function(a, b) {
+var addBinary = function (a, b) {
   let i = 0;
   let carry = 0;
-  let resStr = '';
+  let resStr = "";
   while (i < a.length || i < b.length) {
     // 两个字符串均有值
     let currentA = i < a.length ? Number(a[a.length - 1 - i]) : 0,
@@ -26,5 +26,3 @@ var addBinary = function(a, b) {
   return resStr;
 };
 module.exports = addBinary;
-
-console.log(addBinary('1010', '1011'));

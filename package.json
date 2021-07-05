@@ -17,7 +17,8 @@
   },
   "scripts": {
     "leetcode:test": "cd packages/leetcode;npm test",
-    "ds:test": "cd packages/data-structures;npm test"
+    "ds:test": "cd packages/data-structures;npm test",
+    "new:leetcode": "scripts/creat-leetcode.sh"
   },
   "repository": {
     "type": "git",

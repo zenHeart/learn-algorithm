@@ -11,7 +11,7 @@
  * @param {ListNode} headB
  * @return {ListNode}
  */
-var getIntersectionNode = function(headA, headB) {
+var getIntersectionNode = function (headA, headB) {
   let moveHeadA = headA;
   let moveHeadB = headB;
   let intersectHead = null;
@@ -36,22 +36,3 @@ var getIntersectionNode = function(headA, headB) {
   return intersectHead;
 };
 module.exports = getIntersectionNode;
-
-console.log(
-  getIntersectionNode(
-    {
-      val: 1,
-      next: {
-        val: 2,
-        next: null
-      }
-    },
-    {
-      val: 1,
-      next: {
-        val: 2,
-        next: null
-      }
-    }
-  )
-);

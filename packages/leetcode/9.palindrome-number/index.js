@@ -1,22 +1,15 @@
 /**
  * @param {number} x
- * @return {number}
+ * @return {boolean}
  */
-var reverse = function(x) {
-  let numbers = x.toString(10).split('');
-  if (x < 0) {
-    numbers = numbers.slice(1);
+ var isPalindrome = function(x) {
+  let str = x.toString();
+  let middle = Math.floor(str.length/2);
+  for(i = 0; i< middle; i++) {
+    if(str[i] !== str[str.length - 1 - i]) {
+      return false;
+    }
   }
-  let res = numbers.reduce(
-    (sum, ele, index) => (sum += Number(ele) * 10 ** index),
-    0
-  );
-  if (x < 0) {
-    res = -res;
-  }
-  if (res < -(2 ** 31) || res > 2 ** 31 - 1) {
-    res = 0;
-  }
-  return res;
+  return true
 };
-module.exports = reverse;
+module.exports = isPalindrome;

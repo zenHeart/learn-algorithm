@@ -1,0 +1,15 @@
+@startuml
+digraph finite_state_machine {
+	node [shape = doublecircle]; end;
+	node [shape = circle];
+   rankdir=LR;
+
+	initial -> initial [label = "space"];
+   initial -> sign  [label = "+,-"];
+   sign -> count [label = "number"];
+   initial -> count [label = "number"];
+   count -> count [label = "number"];
+   count -> end [label = "no number"];
+   count -> end [label = "number over flow"];
+}
+@enduml

@@ -1,22 +1,22 @@
 const func = require('./index');
 const { expect } = require('chai');
-describe('reverse integer', function() {
+describe('palindrome number', function() {
   let testData = {
-    'has zero': {
-      input: 1200,
-      expect: 21
+    "one value":  {
+      input: 0,
+      expect: true
     },
-    negative: {
-      input: -1230,
-      expect: -321
+    'positive palindrome number': {
+      input: 121,
+      expect: true
     },
-    overflow: {
-      input: 2 ** 32,
-      expect: 0
+    'no positive palindrome number': {
+      input: 1211,
+      expect: false
     },
-    ' negative overflow': {
-      input: -(2 ** 32),
-      expect: 0
+    'negative palindrome number': {
+      input: -121,
+      expect: false
     }
   };
 

@@ -1,6 +1,6 @@
 const func = require('./index');
 const { expect } = require('chai');
-describe('reverse integer', function() {
+describe.skip('reverse integer', function() {
   let testData = [
     ['I', 1],
     ['IX', 9],

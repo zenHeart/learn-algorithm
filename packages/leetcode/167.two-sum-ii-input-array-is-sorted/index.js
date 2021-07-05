@@ -19,5 +19,3 @@ var twoSum = function(numbers, target) {
 };
 
 module.exports = twoSum;
-
-console.log(twoSum([0, 0, 3, 4], 0));

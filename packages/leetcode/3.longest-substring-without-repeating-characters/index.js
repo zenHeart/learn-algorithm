@@ -21,5 +21,3 @@ var lengthOfLongestSubstring = function(s) {
   return longest;
 };
 module.exports = lengthOfLongestSubstring;
-
-console.log(lengthOfLongestSubstring(' '));

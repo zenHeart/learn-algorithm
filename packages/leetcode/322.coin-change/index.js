@@ -53,5 +53,3 @@ var coinChange = function(coins, amount) {
 };
 
 module.exports = coinChange;
-
-console.log(coinChange([1, 2, 3], 383));

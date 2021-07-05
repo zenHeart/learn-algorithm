@@ -2,7 +2,7 @@
  * @param {string} s
  * @return {string}
  */
-var longestPalindrome = function(s) {
+var longestPalindrome = function (s) {
   let longest = [];
   for (let i = 0; i < s.length - longest.length; i++) {
     let currentRes = [];
@@ -11,23 +11,17 @@ var longestPalindrome = function(s) {
       currentRes.push(currentChar);
       if (
         currentRes.length > longest.length &&
-        currentRes.join('') ===
+        currentRes.join("") ===
           currentRes
             .slice()
             .reverse()
-            .join('')
+            .join("")
       ) {
         longest = currentRes.slice();
       }
     }
   }
-  return longest.join('');
+  return longest.join("");
 };
 
 module.exports = longestPalindrome;
-
-/* console.log(
-  longestPalindrome(
-    'civilwartestingwhetherthatnaptionoranynartionsoconceivedandsodedicatedcanlongendureWeareqmetonagreatbattlefiemldoftzhatwarWehavecometodedicpateaportionofthatfieldasafinalrestingplaceforthosewhoheregavetheirlivesthatthatnationmightliveItisaltogetherfangandproperthatweshoulddothisButinalargersensewecannotdedicatewecannotconsecratewecannothallowthisgroundThebravelmenlivinganddeadwhostruggledherehaveconsecrateditfaraboveourpoorponwertoaddordetractTgheworldadswfilllittlenotlenorlongrememberwhatwesayherebutitcanneverforgetwhattheydidhereItisforusthelivingrathertobededicatedheretotheulnfinishedworkwhichtheywhofoughtherehavethusfarsonoblyadvancedItisratherforustobeherededicatedtothegreattdafskremainingbeforeusthatfromthesehonoreddeadwetakeincreaseddevotiontothatcauseforwhichtheygavethelastpfullmeasureofdevotionthatweherehighlyresolvethatthesedeadshallnothavediedinvainthatthisnationunsderGodshallhaveanewbirthoffreedomandthatgovernmentofthepeoplebythepeopleforthepeopleshallnotperishfromtheearth'
-  )
-); */

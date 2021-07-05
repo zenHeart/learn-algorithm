@@ -32,5 +32,3 @@ var countAndSay = function(n) {
 };
 
 module.exports = countAndSay;
-
-console.log(countAndSay(4));

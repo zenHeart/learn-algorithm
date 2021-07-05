@@ -1,10 +1,12 @@
-# [整数反转](https://leetcode-cn.com/problems/reverse-integer/)
+# [回文字符串](https://leetcode.cn/problems/palindrome-number/)
 
 ## 题解
-反向计算数值,检查溢出。
-
+回文字符串定义如下
+```math
+n = \sum_{i=0}^{n-1} d_i\centerdot{10^{i}} ,d_i= d_{n- 1 - i}, i \ge 0
+```
 
 
 
 ## 易错点
-1. 注意负数的符号需要在反向计算时剔除
+
