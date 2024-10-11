@@ -13,7 +13,9 @@
     "lerna": "^4.0.0",
     "mocha": "^6.2.2",
     "ts-jest": "27.0.5",
-    "typescript": "4.4.2"
+    "typescript": "4.4.2",
+    "chai": "^4.2.0",
+    "yaml": "^1.10.0"
   },
   "scripts": {
     "leetcode:test": "cd packages/leetcode;npm test",
@@ -30,9 +32,5 @@
   "bugs": {
     "url": "https://github.com/zenHeart/learn-algorithm/issues"
   },
-  "homepage": "https://github.com/zenHeart/learn-algorithm#readme",
-  "dependencies": {
-    "chai": "^4.2.0",
-    "yaml": "^1.10.0"
-  }
+  "homepage": "https://github.com/zenHeart/learn-algorithm#readme"
 }
