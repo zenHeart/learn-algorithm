@@ -7,5 +7,6 @@
   "eslint.enable": false,
   "[shellscript]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
-  }
+  },
+  "editor.indentSize": "2"
 }

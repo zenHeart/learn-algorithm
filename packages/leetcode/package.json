@@ -16,6 +16,7 @@
     "mocha": "^6.2.2"
   },
   "scripts": {
+    "new": "scripts/create-leetcode.sh",
     "test": "mocha -w **/*.test.js"
   },
   "repository": {
