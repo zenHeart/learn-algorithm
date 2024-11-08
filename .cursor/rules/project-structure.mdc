@@ -1,0 +1,286 @@
+---
+alwaysApply: true
+description: "项目结构和目录组织规范，定义文件和文件夹的命名、组织原则"
+---
+
+# 项目结构和目录组织规范
+
+## 总体项目结构
+
+基于 [requirement.md](mdc:requirement.md) 的定义，项目采用以下目录结构：
+
+```
+learn-algorithm/
+├── sites.config.ts            # 站点配置文件 (TypeScript)
+├── package.json               # 项目依赖和脚本
+├── vite.config.ts            # Vite 构建配置
+├── docs/                     # 内容目录 (完全独立)
+│   ├── algorithms/
+│   ├── data-structures/ 
+│   ├── encode/
+│   ├── leetcode/
+│   └── math/
+├── .sites/                   # 站点构建系统 (可独立迁移)
+│   ├── config/              # 配置相关
+│   ├── core/                # 核心构建逻辑
+│   ├── plugins/             # 内置插件
+│   ├── themes/              # 主题系统
+│   ├── types/               # 类型定义
+│   ├── utils/               # 工具函数
+│   └── vite-plugin/         # Vite 集成
+├── src/                     # 应用源码
+│   ├── components/          # React 组件
+│   ├── pages/               # 页面组件
+│   ├── hooks/               # 自定义 hooks
+│   ├── stores/              # 状态管理
+│   └── utils/               # 应用工具
+└── public/                  # 静态资源
+    ├── favicon.ico
+    ├── logo.svg
+    ├── CNAME               # GitHub Pages 域名
+    └── .nojekyll          # 禁用 Jekyll
+```
+
+## 文件命名规范
+
+### 组件文件命名
+- React 组件使用 **PascalCase**：`CodeEditor.tsx`, `PlaygroundPage.tsx`
+- Hook 文件使用 **camelCase** 并以 `use` 开头：`useCodeRunner.ts`, `useTheme.ts`
+- 类型定义文件使用 **camelCase**：`types.ts`, `config.ts`
+- 工具函数文件使用 **camelCase**：`fileUtils.ts`, `pathUtils.ts`
+
+### 目录命名
+- 功能模块目录使用 **kebab-case**：`data-structures`, `code-editor`
+- 组件目录使用 **PascalCase**：`CodeEditor/`, `PlaygroundPage/`
+- 配置目录使用 **camelCase**：`config/`, `plugins/`, `themes/`
+
+## 组件目录组织 
+
+### 按功能模块组织
+```
+src/components/
+├── ui/                      # 通用 UI 组件
+│   ├── Button/
+│   │   ├── index.tsx
+│   │   ├── Button.test.tsx
+│   │   └── types.ts
+│   ├── Modal/
+│   └── Tooltip/
+├── mdx/                     # MDX 相关组件
+│   ├── playground/
+│   │   ├── index.tsx        # 主入口组件
+│   │   ├── CodeEditor.tsx   # 代码编辑器
+│   │   ├── TestRunner.tsx   # 测试执行器
+│   │   ├── OutputPanel.tsx  # 输出面板
+│   │   ├── types.ts         # 类型定义
+│   │   └── hooks/           # 相关 hooks
+│   │       ├── useCodeRunner.ts
+│   │       └── useAnimation.ts
+│   ├── data-structure/
+│   │   ├── index.tsx        # 可视化入口
+│   │   ├── BinaryTree.tsx   # 二叉树组件
+│   │   ├── Graph.tsx        # 图结构组件
+│   │   ├── Array.tsx        # 数组组件
+│   │   └── hooks/           # 相关 hooks
+│   │       ├── useAnimation.ts
+│   │       └── useDataStructure.ts
+│   └── encode/
+│       ├── index.tsx        # 编码可视化入口
+│       ├── UTF8Visualizer.tsx # UTF8 编码
+│       ├── HuffmanTree.tsx  # 霍夫曼编码
+│       └── utils/           # 工具函数
+│           └── encodingUtils.ts
+└── layout/                  # 布局组件
+    ├── Header.tsx
+    ├── Sidebar.tsx
+    ├── Footer.tsx
+    └── MainLayout.tsx
+```
+
+### 组件内部结构
+每个复杂组件应遵循以下内部结构：
+
+```
+ComponentName/
+├── index.tsx              # 主组件导出
+├── ComponentName.tsx      # 主组件实现
+├── ComponentName.test.tsx # 组件测试
+├── types.ts              # 组件特定类型
+├── hooks/                # 组件特定 hooks
+│   ├── useComponentLogic.ts
+│   └── useComponentState.ts
+├── components/           # 子组件
+│   ├── SubComponent1.tsx
+│   └── SubComponent2.tsx
+└── utils/               # 组件特定工具
+    └── helpers.ts
+```
+
+## 内容目录组织 (docs/)
+
+### 自动化目录结构
+内容目录使用数字前缀进行排序，参考 [requirement.md](mdc:requirement.md) 中的规则：
+
+```
+docs/
+├── 1.algorithms/           # 权重: 1
+│   ├── index.md           # 算法主页
+│   ├── 01.sort/           # 权重: 1.1 (排序算法)
+│   │   ├── index.md
+│   │   ├── quick-sort.md
+│   │   ├── quick-sort-demo.js
+│   │   └── _examples/
+│   │       └── visualization/
+│   ├── 02.search/         # 权重: 1.2 (搜索算法)
+│   └── 03.dynamic-programming/ # 权重: 1.3
+├── 2.data-structures/     # 权重: 2
+│   ├── index.md
+│   ├── 01.linear/         # 权重: 2.1 (线性结构)
+│   │   ├── array.md
+│   │   ├── linked-list.md
+│   │   └── _examples/
+│   └── 02.tree/           # 权重: 2.2 (树结构)
+├── 3.leetcode/            # 权重: 3
+│   ├── index.md
+│   ├── 1.two-sum/
+│   │   ├── index.md
+│   │   ├── solution.js
+│   │   └── test.js
+│   └── 2.add-two-numbers/
+├── math/                  # 权重: 999 (无序号)
+└── encode/                # 权重: 999 (无序号)
+```
+
+### 文档文件命名规范
+- 主页文件使用 `index.md`
+- 内容文件使用 **kebab-case**：`binary-tree.md`, `quick-sort.md`
+- 示例文件使用对应的语言扩展名：`.js`, `.py`, `.java`, `.cpp`
+- 配置文件使用 `.json` 或 `.yaml`
+
+## 构建系统目录 (.sites/)
+
+### 模块化构建系统
+```
+.sites/
+├── config/                # 配置模块
+│   ├── defineConfig.ts    # 配置定义函数
+│   ├── types.ts          # 完整类型定义
+│   ├── siteConfig.ts     # 配置解析器
+│   ├── pluginLoader.ts   # 插件加载器
+│   ├── themeLoader.ts    # 主题加载器
+│   └── defaults.ts       # 默认配置
+├── core/                 # 核心构建逻辑
+│   ├── builder.ts        # 站点构建器
+│   ├── router.ts         # 路由生成器
+│   ├── contentProcessor.ts # 内容处理器
+│   ├── markdownProcessor.ts # Markdown 处理
+│   └── sidebarGenerator.ts # 侧边栏自动生成
+├── plugins/              # 内置插件系统
+│   ├── playground/
+│   │   ├── index.ts      # 插件入口
+│   │   ├── processor.ts  # @playground 处理器
+│   │   ├── components/   # 插件组件
+│   │   └── types.ts     # 插件类型
+│   ├── visualization/
+│   ├── math/
+│   └── search/
+├── themes/               # 主题系统
+│   ├── default/
+│   └── algorithm-learning/
+│       ├── index.ts      # 主题配置
+│       ├── layouts/      # 布局组件
+│       ├── components/   # 主题组件
+│       └── styles/       # 主题样式
+├── types/                # 类型定义
+│   ├── config.ts         # 配置类型
+│   ├── plugin.ts         # 插件类型
+│   ├── theme.ts          # 主题类型
+│   └── content.ts        # 内容类型
+├── utils/                # 工具函数
+│   ├── file.ts
+│   ├── markdown.ts
+│   ├── path.ts
+│   └── validation.ts
+└── vite-plugin/          # Vite 集成
+    ├── index.ts          # 主插件
+    ├── configPlugin.ts   # 配置插件
+    └── devPlugin.ts      # 开发插件
+```
+
+## 文件导入规范
+
+### 路径别名使用
+基于 [vite.config.ts](mdc:vite.config.ts) 的配置：
+
+```typescript
+// ✅ 推荐：使用路径别名
+import { CodeEditor } from '@/components/mdx/playground'
+import { useTheme } from '@/hooks/useTheme'
+import { siteConfig } from '@/sites/config'
+import type { SiteConfig } from 'virtual:site-config'
+
+// ❌ 避免：相对路径过深
+import { CodeEditor } from '../../../components/mdx/playground'
+import { useTheme } from '../../hooks/useTheme'
+```
+
+### 导入顺序规范
+```typescript
+// 1. Node.js 内置模块
+import fs from 'fs'
+import path from 'path'
+
+// 2. 第三方依赖
+import React from 'react'
+import { defineConfig } from 'vite'
+
+// 3. 内部模块 (使用别名)
+import { CodeEditor } from '@/components'
+import { useTheme } from '@/hooks'
+
+// 4. 相对导入
+import { helper } from './utils'
+import type { LocalTypes } from './types'
+```
+
+## 配置文件组织
+
+### 配置文件位置
+- 主配置文件：项目根目录的 `sites.config.ts`
+- 构建配置：项目根目录的 `vite.config.ts`, `package.json`
+- 工具配置：`.eslintrc.js`, `prettier.config.js`, `tailwind.config.js`
+- 部署配置：`.github/workflows/deploy.yml`
+
+### 配置文件引用
+在配置文件中引用其他项目文件时，使用相对路径：
+
+```typescript
+// sites.config.ts
+import { defineConfig } from './.sites/config/defineConfig'  // 相对路径
+
+// vite.config.ts  
+import { siteBuilderPlugin } from './.sites/vite-plugin'     // 相对路径
+```
+
+## 测试文件组织
+
+### 测试文件位置
+- 单元测试：与被测试文件同目录，使用 `.test.tsx` 后缀
+- 集成测试：`src/__tests__/` 目录
+- E2E 测试：`tests/` 目录
+
+```
+src/components/CodeEditor/
+├── index.tsx
+├── CodeEditor.tsx
+├── CodeEditor.test.tsx    # 单元测试
+└── types.ts
+
+src/__tests__/             # 集成测试
+├── playground.test.tsx
+└── visualization.test.tsx
+
+tests/                     # E2E 测试
+├── basic-navigation.spec.ts
+└── code-execution.spec.ts
+```

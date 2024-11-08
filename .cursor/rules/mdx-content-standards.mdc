@@ -1,0 +1,388 @@
+---
+globs: "*.md,*.mdx"
+description: "MDX 和内容编写规范，包括 @playground 注释、DSL 语法、YAML 前置元数据等"
+---
+
+# MDX 和内容编写规范
+
+## 文档结构规范
+
+### YAML 前置元数据
+
+每个 Markdown 文件必须包含 YAML front matter：
+
+```markdown
+---
+title: "快速排序算法"
+difficulty: "中等"
+tags: ["排序", "分治", "递归"]
+visualization: true
+playground: 
+  - id: "quick-sort-demo"
+    template: "demo"
+  - id: "quick-sort-exercise" 
+    template: "exercise"
+related: ["merge-sort", "heap-sort"]
+---
+
+# 快速排序算法
+
+## 算法原理
+
+快速排序是一种高效的排序算法...
+```
+
+### 标准文档结构
+
+```markdown
+# 页面标题
+
+## 概述
+简要介绍主要内容
+
+## 核心概念
+详细解释关键概念
+
+## 代码实现
+{/* @playground id="example" template="demo" */}
+
+## 可视化演示
+```ds-viz type="binary-tree"
+data: [8, 3, 10, 1, 6, 14, 4, 7, 13]
+operations: ["insert", "delete", "search"]
+animation: "slow"
+```
+
+## 练习题
+
+{/*@playground id="exercise" template="exercise"*/}
+
+## 相关内容
+
+- [相关算法1](link1)
+- [相关算法2](link2)
+
+```
+
+## @playground 注释规范
+
+### 基础语法
+```markdown
+{/* @playground id="unique-id" template="demo" */}
+{/* @playground id="exercise-id" template="exercise" language="python" */}
+{/* @playground id="test-id" template="test" showOutput="true" */}
+```
+
+### 模板类型说明
+
+- `demo`: 只读演示代码，不可编辑
+- `exercise`: 练习模式，用户可以编辑代码
+- `test`: 测试模式，包含测试用例和验证
+- `data-structure`: 数据结构可视化
+- `encode`: 编码过程可视化
+
+### 文件查找规则
+
+基于 [requirement.md](mdc:requirement.md) 定义的查找规则：
+
+```markdown
+<!-- 当前文档: docs/algorithms/sort/quick-sort.md -->
+
+{/* @playground id="quick-sort" template="demo" */}
+<!-- 查找顺序:
+1. docs/algorithms/sort/quick-sort.js
+2. docs/algorithms/sort/quick-sort/index.js  
+3. docs/algorithms/sort/_examples/quick-sort/demo.js
+-->
+
+{/* @playground id="binary-tree-viz" template="data-structure" */}
+<!-- 查找顺序:
+1. docs/algorithms/sort/binary-tree-viz.json
+2. docs/algorithms/sort/_examples/binary-tree-viz/config.json
+-->
+```
+
+### 配置参数
+
+```markdown
+{/* @playground 
+  id="advanced-example" 
+  template="exercise" 
+  language="javascript"
+  theme="dark"
+  showLineNumbers="true"
+  autoRun="false"
+*/}
+```
+
+## 数据结构可视化 DSL
+
+### 简洁语法 (基于 BNF 定义)
+
+```markdown
+```binary-tree
+8,3,10,1,6,14,4,7,13
+operations: insert,delete,search
+animation: slow
+interactive: true
+```
+
+```graph
+nodes: A,B,C,D,E
+edges: A-B,B-C,C-D,D-A,A-E
+algorithm: bfs
+start: A
+highlight: path
+```
+
+```array
+data: 64,34,25,12,22,11,90
+algorithm: quicksort
+step: auto
+compare: highlight
+```
+
+### BNF 语法规则
+
+遵循图灵完备的 BNF 语法定义，支持：
+
+- 数据定义：逗号分隔的数字或标识符列表
+- 边定义：`A-B` 格式表示连接关系
+- 选项配置：`key: value` 格式
+
+### 支持的数据结构类型
+
+- `binary-tree`: insert, delete, search, traverse
+- `graph`: bfs, dfs, dijkstra, mst  
+- `array`: sort, search, partition
+- `linked-list`: insert, delete, traverse
+- `stack`, `queue`: push, pop, peek
+- `hash-table`: put, get, remove, rehash
+
+### AntV G2 渲染引擎
+
+基于 AntV G2 可视化引擎，支持：
+
+- Canvas 高性能渲染
+- 交互式操作 (点击、缩放、拖拽)
+- 流畅的动画效果
+- 响应式布局适配
+
+## 编码可视化 DSL
+
+### UTF-8 编码示例
+
+```markdown
+```encode-viz type="utf8"
+input: "Hello 世界"
+show: ["binary", "hex", "steps"]
+encoding: "utf-8"
+options: {
+  showByteBreakdown: true,
+  highlightMultibyte: true
+}
+```
+
+### 霍夫曼编码示例
+
+```markdown
+```encode-viz type="huffman"
+input: "abracadabra"
+show: ["tree", "table", "compressed"]
+options: {
+  showFrequency: true,
+  animateCompression: true,
+  showCompressionRatio: true
+}
+```
+
+### 支持的编码类型
+
+- `utf8`: UTF-8 编码
+- `ascii`: ASCII 编码
+- `huffman`: 霍夫曼编码
+- `base64`: Base64 编码
+- `url`: URL 编码
+
+## 数学公式规范
+
+### 行内公式
+
+```markdown
+时间复杂度为 $O(n \log n)$，空间复杂度为 $O(\log n)$。
+```
+
+### 块级公式
+
+```markdown
+快速排序的平均时间复杂度计算：
+
+$$
+T(n) = 2T(n/2) + O(n) = O(n \log n)
+$$
+```
+
+### 复杂公式示例
+
+```markdown
+$$
+\begin{align}
+T(n) &= T(k) + T(n-k-1) + O(n) \\
+&= \sum_{k=0}^{n-1} \frac{1}{n}[T(k) + T(n-k-1)] + O(n) \\
+&= \frac{2}{n}\sum_{k=0}^{n-1}T(k) + O(n)
+\end{align}
+$$
+```
+
+## 代码块规范
+
+### 标准代码块
+
+```markdown
+```javascript
+function quickSort(arr) {
+  if (arr.length <= 1) return arr;
+  
+  const pivot = arr[Math.floor(arr.length / 2)];
+  const left = arr.filter(x => x < pivot);
+  const middle = arr.filter(x => x === pivot);
+  const right = arr.filter(x => x > pivot);
+  
+  return [...quickSort(left), ...middle, ...quickSort(right)];
+}
+```
+
+### 多语言代码对比
+
+```markdown
+```javascript title="JavaScript 实现"
+function binarySearch(arr, target) {
+  let left = 0, right = arr.length - 1;
+  
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    if (arr[mid] === target) return mid;
+    if (arr[mid] < target) left = mid + 1;
+    else right = mid - 1;
+  }
+  
+  return -1;
+}
+```
+
+```python title="Python 实现"
+def binary_search(arr, target):
+    left, right = 0, len(arr) - 1
+    
+    while left <= right:
+        mid = (left + right) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    
+    return -1
+```
+
+## 内容组织规范
+
+### 标题层级
+
+- `#`: 页面主标题 (一个文档只能有一个)
+- `##`: 主要章节
+- `###`: 子章节
+- `####`: 细分内容
+
+### 链接规范
+
+```markdown
+<!-- ✅ 推荐：内部链接使用相对路径 -->
+[快速排序](/algorithms/sort/quick-sort)
+[二分查找](./binary-search)
+
+<!-- ✅ 推荐：外部链接使用完整 URL -->
+[MDN Web Docs](https://developer.mozilla.org/)
+
+<!-- ❌ 避免：内部链接使用绝对路径 -->
+[错误示例](http://blog.zenheart.site/learn-algorithm/algorithms/sort)
+```
+
+### 图片和媒体
+
+```markdown
+<!-- ✅ 推荐：使用相对路径 -->
+![算法复杂度图](./images/complexity-chart.png)
+
+<!-- ✅ 推荐：添加 alt 文本 -->
+![快速排序动画演示](./animations/quicksort.gif)
+
+<!-- ✅ 推荐：指定图片尺寸 -->
+<img src="./diagrams/tree-structure.svg" alt="二叉树结构图" width="400" height="300" />
+```
+
+### 表格规范
+
+```markdown
+| 算法 | 最好时间复杂度 | 平均时间复杂度 | 最坏时间复杂度 | 空间复杂度 |
+|------|----------------|----------------|----------------|------------|
+| 快速排序 | $O(n \log n)$ | $O(n \log n)$ | $O(n^2)$ | $O(\log n)$ |
+| 归并排序 | $O(n \log n)$ | $O(n \log n)$ | $O(n \log n)$ | $O(n)$ |
+| 堆排序 | $O(n \log n)$ | $O(n \log n)$ | $O(n \log n)$ | $O(1)$ |
+```
+
+## 文档元数据规范
+
+### 必需字段
+
+```yaml
+---
+title: "页面标题"        # 必需
+description: "页面描述"   # 可选，用于 SEO
+---
+```
+
+### 算法文档元数据
+
+```yaml
+---
+title: "快速排序算法"
+description: "高效的分治排序算法"
+difficulty: "中等"       # 简单/中等/困难
+timeComplexity: "O(n log n)"
+spaceComplexity: "O(log n)"
+tags: ["排序", "分治", "递归"]
+category: "算法"
+subcategory: "排序算法"
+---
+```
+
+### LeetCode 题目元数据
+
+```yaml
+---
+title: "1. 两数之和"
+leetcodeId: 1
+difficulty: "简单"
+tags: ["数组", "哈希表"]
+companies: ["字节跳动", "阿里巴巴"]
+related: [15, 18, 167]    # 相关题目 ID
+---
+```
+
+### 数据结构文档元数据
+
+```yaml
+---
+title: "二叉搜索树"
+description: "基于二叉树的搜索数据结构"
+operations: ["插入", "删除", "搜索"]
+timeComplexity: {
+  search: "O(log n)",
+  insert: "O(log n)", 
+  delete: "O(log n)"
+}
+visualization: true
+---
+```

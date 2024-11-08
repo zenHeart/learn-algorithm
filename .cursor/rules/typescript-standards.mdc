@@ -1,0 +1,298 @@
+---
+globs: "*.ts,*.tsx"
+description: "TypeScript 编码规范，包括类型定义、接口设计、类型安全等"
+---
+
+# TypeScript 编码规范
+
+## 类型安全原则
+
+### 严格类型检查
+- 启用 TypeScript 严格模式
+- 避免使用 `any` 类型
+- 优先使用联合类型和字面量类型
+
+```typescript
+// ✅ 推荐：明确的类型定义
+interface CodeEditorProps {
+  language: 'javascript' | 'python' | 'java' | 'cpp';  // 字面量类型
+  template: 'demo' | 'exercise' | 'test';
+  code?: string;                                        // 可选属性
+  readOnly?: boolean;
+  onCodeChange: (code: string) => void;                // 函数类型
+}
+
+// ❌ 避免：使用 any
+interface BadProps {
+  config: any;        // 应该定义具体类型
+  data: any[];        // 应该定义数组元素类型
+  callback: any;      // 应该定义函数签名
+}
+```
+
+### 接口设计原则
+- 接口名称使用 PascalCase
+- 属性按重要性和类型分组
+- 使用泛型提高复用性
+
+```typescript
+// ✅ 推荐：良好的接口设计
+interface VisualizationConfig<T = any> {
+  // 必需属性
+  type: 'binary-tree' | 'graph' | 'array';
+  data: T[];
+  
+  // 可选的显示配置
+  animation?: {
+    speed: 'slow' | 'normal' | 'fast';
+    enabled: boolean;
+  };
+  
+  // 可选的交互配置
+  interactive?: boolean;
+  showControls?: boolean;
+  
+  // 事件回调
+  onNodeClick?: (node: T) => void;
+  onAnimationComplete?: () => void;
+}
+
+// 使用泛型特化
+interface TreeNode {
+  id: string;
+  value: number;
+  children?: TreeNode[];
+}
+
+type TreeVisualization = VisualizationConfig<TreeNode>;
+```
+
+## 类型组织规范
+
+### 类型文件结构
+- 共享类型放在 `types.ts` 文件中
+- 组件特定类型与组件文件就近放置
+- 使用 `index.ts` 统一导出
+
+```typescript
+// types/index.ts - 统一导出
+export * from './config';
+export * from './components';
+export * from './plugins';
+
+// types/config.ts - 配置相关类型
+export interface SiteConfig {
+  site: SiteInfo;
+  nav: NavItem[];
+  // ...
+}
+
+// components/CodeEditor/types.ts - 组件特定类型
+export interface CodeEditorProps {
+  // ...
+}
+```
+
+### 命名约定
+- 接口使用 `I` 前缀或描述性名称
+- 类型别名使用 `Type` 后缀
+- 枚举使用 PascalCase
+
+```typescript
+// ✅ 推荐：清晰的命名
+interface PlaygroundConfig {
+  templates: TemplateType[];
+  defaultLanguage: ProgrammingLanguage;
+}
+
+type TemplateType = 'demo' | 'exercise' | 'test';
+type ProgrammingLanguage = 'javascript' | 'python' | 'java' | 'cpp';
+
+enum ThemeMode {
+  Light = 'light',
+  Dark = 'dark',
+  Auto = 'auto'
+}
+
+// ❌ 避免：模糊的命名
+interface Config {        // 太泛化
+  data: any;             // 不明确
+}
+
+type T = string;         // 无意义的名称
+```
+
+## 高级类型使用
+
+### 工具类型活用
+- 使用 `Partial`、`Pick`、`Omit` 等工具类型
+- 善用条件类型和映射类型
+
+```typescript
+// ✅ 推荐：工具类型的使用
+interface BaseComponent {
+  id: string;
+  title: string;
+  description: string;
+  visible: boolean;
+}
+
+// 创建组件时只需要部分属性
+type CreateComponentData = Omit<BaseComponent, 'id'>;
+
+// 更新组件时所有属性都是可选的
+type UpdateComponentData = Partial<BaseComponent>;
+
+// 只选择显示相关的属性
+type ComponentDisplay = Pick<BaseComponent, 'title' | 'visible'>;
+
+// 条件类型示例
+type ApiResponse<T> = T extends string 
+  ? { message: T } 
+  : { data: T };
+```
+
+### 泛型约束
+- 使用 `extends` 约束泛型类型
+- 提供默认类型参数
+
+```typescript
+// ✅ 推荐：泛型约束
+interface Identifiable {
+  id: string;
+}
+
+interface Repository<T extends Identifiable> {
+  findById(id: string): Promise<T | null>;
+  save(entity: T): Promise<T>;
+  delete(id: string): Promise<boolean>;
+}
+
+// 带默认类型的泛型
+interface EventHandler<T = Event> {
+  handle(event: T): void;
+}
+
+// 键值约束
+function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
+  return obj[key];
+}
+```
+
+## 错误处理规范
+
+### 类型安全的错误处理
+- 使用联合类型表示错误状态
+- 避免抛出异常，优先返回 Result 类型
+
+```typescript
+// ✅ 推荐：类型安全的错误处理
+type Result<T, E = Error> = 
+  | { success: true; data: T }
+  | { success: false; error: E };
+
+interface CodeExecutionError {
+  type: 'syntax' | 'runtime' | 'timeout';
+  message: string;
+  line?: number;
+}
+
+async function executeCode(code: string): Promise<Result<string, CodeExecutionError>> {
+  try {
+    const output = await runCode(code);
+    return { success: true, data: output };
+  } catch (error) {
+    return { 
+      success: false, 
+      error: {
+        type: 'runtime',
+        message: error.message
+      }
+    };
+  }
+}
+
+// 使用示例
+const result = await executeCode(userCode);
+if (result.success) {
+  console.log(result.data);  // TypeScript 知道这是 string
+} else {
+  console.error(result.error); // TypeScript 知道这是 CodeExecutionError
+}
+```
+
+## 函数类型规范
+
+### 函数签名定义
+- 明确定义参数和返回值类型
+- 使用函数重载处理多种签名
+
+```typescript
+// ✅ 推荐：明确的函数类型
+interface VisualizationAPI {
+  // 基础方法
+  render(data: any[]): void;
+  
+  // 带配置的方法
+  render(data: any[], config: VisualizationConfig): void;
+  
+  // 异步方法
+  loadData(source: string): Promise<any[]>;
+  
+  // 事件处理器
+  on(event: 'complete', handler: () => void): void;
+  on(event: 'error', handler: (error: Error) => void): void;
+  on(event: 'progress', handler: (progress: number) => void): void;
+}
+
+// 高阶函数类型
+type ComponentWrapper<P = {}> = <T extends React.ComponentType<P>>(
+  Component: T
+) => React.ComponentType<P>;
+```
+
+### React 特定类型
+- 使用 React 提供的类型定义
+- 正确定义组件 Props 和 Ref
+
+```typescript
+// ✅ 推荐：React 类型使用
+import { 
+  FC, 
+  ReactNode, 
+  RefObject, 
+  forwardRef, 
+  useImperativeHandle 
+} from 'react';
+
+interface CodeEditorRef {
+  getValue(): string;
+  setValue(value: string): void;
+  focus(): void;
+}
+
+interface CodeEditorProps {
+  value: string;
+  onChange: (value: string) => void;
+  children?: ReactNode;
+  className?: string;
+}
+
+const CodeEditor = forwardRef<CodeEditorRef, CodeEditorProps>(
+  ({ value, onChange, children, className }, ref) => {
+    useImperativeHandle(ref, () => ({
+      getValue: () => value,
+      setValue: onChange,
+      focus: () => {
+        // focus implementation
+      }
+    }));
+
+    return (
+      <div className={className}>
+        {children}
+      </div>
+    );
+  }
+);
+```

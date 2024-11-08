@@ -1,0 +1,125 @@
+---
+globs: "*.tsx,*.jsx"
+description: "React 组件编写规范，包括组件架构、函数精简、就近原则等"
+---
+
+# React 组件编写规范
+
+## 组件架构设计原则
+
+### 就近原则
+- 组件和相关文件必须放在同一目录下
+- 相关的类型定义、样式、测试文件都应该就近放置
+
+```typescript
+// ✅ 推荐的目录结构
+src/components/playground/
+├── index.tsx           # 主入口组件
+├── CodeEditor.tsx      # 子组件
+├── types.ts           # 类型定义
+├── hooks/             # 相关 hooks
+│   └── useCodeRunner.ts
+└── __tests__/         # 测试文件
+    └── CodeEditor.test.tsx
+```
+
+### 单一职责原则
+- 每个组件只负责一个明确的功能
+- 避免在一个组件中处理多个不相关的逻辑
+
+### 函数精简原则
+- **单个函数不得超过 30 行代码**
+- 复杂逻辑必须拆分为多个小函数
+- 使用自定义 hooks 提取可复用逻辑
+
+```typescript
+// ❌ 避免：函数过长
+const ComplexComponent = () => {
+  // 50+ 行代码...
+}
+
+// ✅ 推荐：拆分为多个小函数
+const useComponentLogic = () => {
+  // 逻辑提取到 hook
+}
+
+const ComponentHeader = () => {
+  // 小于 30 行
+}
+
+const ComponentBody = () => {
+  // 小于 30 行
+}
+
+const MainComponent = () => {
+  const logic = useComponentLogic()
+  return (
+    <>
+      <ComponentHeader />
+      <ComponentBody />
+    </>
+  )
+}
+```
+
+### 模块化设计
+- 可复用逻辑必须提取为自定义 hooks
+- 公共组件放在 `src/components/ui/` 目录
+- 业务组件按功能模块组织
+
+## 组件命名规范
+
+- 组件文件名使用 PascalCase：`CodeEditor.tsx`
+- 组件函数名与文件名保持一致
+- Hook 文件名使用 camelCase 并以 `use` 开头：`useCodeRunner.ts`
+
+## TypeScript 类型规范
+
+- 所有 props 必须定义明确的 TypeScript 接口
+- 避免使用 `any` 类型
+- 使用泛型提高代码复用性
+
+```typescript
+// ✅ 推荐：明确的类型定义
+interface CodeEditorProps {
+  language: 'javascript' | 'python' | 'java' | 'cpp';
+  template: 'demo' | 'exercise' | 'test';
+  onCodeChange: (code: string) => void;
+  showLineNumbers?: boolean;
+}
+
+const CodeEditor: React.FC<CodeEditorProps> = ({
+  language,
+  template,
+  onCodeChange,
+  showLineNumbers = true
+}) => {
+  // 组件实现
+}
+```
+
+## 性能优化要求
+
+- 使用 `React.memo` 包装纯组件
+- 使用 `useMemo` 和 `useCallback` 优化重复计算
+- 避免在渲染函数中创建新对象或函数
+
+```typescript
+// ✅ 推荐：性能优化
+const CodeEditor = React.memo<CodeEditorProps>(({ 
+  language, 
+  onCodeChange 
+}) => {
+  const handleChange = useCallback((value: string) => {
+    onCodeChange(value)
+  }, [onCodeChange])
+
+  const editorConfig = useMemo(() => ({
+    language,
+    theme: 'vs-dark',
+    options: { lineNumbers: true }
+  }), [language])
+
+  return <Editor {...editorConfig} onChange={handleChange} />
+})
+```

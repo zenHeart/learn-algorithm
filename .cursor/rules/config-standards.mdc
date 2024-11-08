@@ -1,0 +1,324 @@
+---
+globs: "sites.config.ts,*.config.ts,*.config.js"
+description: "配置文件编写规范，包括 TypeScript 配置、站点配置、插件配置等"
+---
+
+# 配置文件编写规范
+
+## 站点配置规范 (sites.config.ts)
+
+### 基础配置结构
+- 使用 `defineConfig` 函数确保类型安全
+- 按功能模块组织配置项
+- 提供清晰的注释说明
+
+```typescript
+// ✅ 推荐：良好的配置结构
+import { defineConfig } from './.sites/config/defineConfig'
+
+export default defineConfig({
+  // 站点基础信息
+  site: {
+    title: "算法学习平台",
+    description: "交互式算法与数据结构学习平台",
+    author: "算法学习团队",
+    url: "http://blog.zenheart.site/learn-algorithm",
+    baseUrl: "/learn-algorithm/",
+    favicon: "/favicon.ico"
+  },
+  
+  // 导航配置
+  nav: [
+    { text: "首页", link: "/" },
+    { text: "数据结构", link: "/data-structures" },
+    // ... 其他导航项
+  ],
+
+  // 插件配置 - 按功能分组
+  plugins: [
+    // 代码编辑器插件
+    {
+      name: "@algorithm-learning/plugin-playground",
+      options: {
+        templates: ["demo", "exercise", "test", "data-structure", "encode"],
+        defaultLanguage: "javascript",
+        supportedLanguages: ["javascript", "python", "java", "cpp"]
+      }
+    },
+    
+    // 可视化插件
+    {
+      name: "@algorithm-learning/plugin-visualization",
+      options: {
+        dataStructures: ["binary-tree", "graph", "array", "linked-list"],
+        encoding: ["utf8", "ascii", "huffman", "base64"],
+        animation: {
+          defaultSpeed: "normal",
+          enableControls: true
+        }
+      }
+    }
+  ]
+})
+```
+
+### 配置模块化
+- 大型配置拆分为多个文件
+- 使用导入组合不同模块
+
+```typescript
+// configs/plugins.ts - 插件配置模块
+export const playgroundPlugin = {
+  name: "@algorithm-learning/plugin-playground",
+  options: {
+    templates: ["demo", "exercise", "test"],
+    defaultLanguage: "javascript" as const,
+    supportedLanguages: ["javascript", "python", "java"] as const
+  }
+} as const;
+
+export const visualizationPlugin = {
+  name: "@algorithm-learning/plugin-visualization", 
+  options: {
+    dataStructures: ["binary-tree", "graph", "array"] as const,
+    animation: {
+      defaultSpeed: "normal" as const,
+      enableControls: true
+    }
+  }
+} as const;
+
+// configs/nav.ts - 导航配置模块
+export const mainNavigation = [
+  { text: "首页", link: "/" },
+  { text: "数据结构", link: "/data-structures" },
+  { text: "算法", link: "/algorithms" },
+] as const;
+
+// sites.config.ts - 主配置文件
+import { defineConfig } from './.sites/config/defineConfig'
+import { playgroundPlugin, visualizationPlugin } from './configs/plugins'
+import { mainNavigation } from './configs/nav'
+
+export default defineConfig({
+  nav: mainNavigation,
+  plugins: [
+    playgroundPlugin,
+    visualizationPlugin
+  ],
+  // ... 其他配置
+})
+```
+
+## 环境配置管理
+
+### 多环境配置支持
+- 使用环境变量区分不同环境
+- 提供开发和生产环境的不同配置
+
+```typescript
+// ✅ 推荐：环境感知的配置
+const isDevelopment = process.env.NODE_ENV === 'development'
+const isProduction = process.env.NODE_ENV === 'production'
+
+export default defineConfig({
+  site: {
+    title: "算法学习平台",
+    url: isDevelopment 
+      ? "http://localhost:3000" 
+      : "http://blog.zenheart.site/learn-algorithm",
+    baseUrl: isDevelopment ? "/" : "/learn-algorithm/"
+  },
+
+  build: {
+    sourcemap: isDevelopment,
+    minify: isProduction,
+    outDir: "dist"
+  },
+
+  // 开发环境特定配置
+  ...(isDevelopment && {
+    devServer: {
+      port: 3000,
+      host: 'localhost'
+    }
+  })
+})
+```
+
+### 配置验证
+- 添加运行时配置验证
+- 提供有用的错误消息
+
+```typescript
+// ✅ 推荐：配置验证
+function validateSiteConfig(config: any): config is SiteConfig {
+  const errors: string[] = []
+  
+  if (!config.site?.title) {
+    errors.push('site.title is required')
+  }
+  
+  if (!config.site?.baseUrl) {
+    errors.push('site.baseUrl is required')
+  }
+  
+  if (!Array.isArray(config.nav)) {
+    errors.push('nav must be an array')
+  }
+  
+  if (errors.length > 0) {
+    throw new Error(`Configuration validation failed:\n${errors.join('\n')}`)
+  }
+  
+  return true
+}
+
+export function defineConfig(config: SiteConfig): SiteConfig {
+  validateSiteConfig(config)
+  return config
+}
+```
+
+## 插件配置规范
+
+### 插件配置类型安全
+- 为每个插件定义明确的配置接口
+- 使用泛型约束插件配置
+
+```typescript
+// ✅ 推荐：类型安全的插件配置
+interface PluginConfig<T = Record<string, any>> {
+  name: string
+  options?: T
+}
+
+interface PlaygroundPluginOptions {
+  templates: ('demo' | 'exercise' | 'test')[]
+  defaultLanguage: 'javascript' | 'python' | 'java' | 'cpp'
+  supportedLanguages: ('javascript' | 'python' | 'java' | 'cpp')[]
+  theme?: 'light' | 'dark' | 'auto'
+}
+
+interface VisualizationPluginOptions {
+  dataStructures: ('binary-tree' | 'graph' | 'array' | 'linked-list')[]
+  encoding: ('utf8' | 'ascii' | 'huffman' | 'base64')[]
+  animation: {
+    defaultSpeed: 'slow' | 'normal' | 'fast'
+    enableControls: boolean
+  }
+}
+
+// 使用时的类型安全
+const plugins: [
+  PluginConfig<PlaygroundPluginOptions>,
+  PluginConfig<VisualizationPluginOptions>
+] = [
+  {
+    name: "@algorithm-learning/plugin-playground",
+    options: {
+      templates: ["demo", "exercise"],  // 类型检查
+      defaultLanguage: "javascript",    // 类型检查
+      supportedLanguages: ["javascript", "python"]
+    }
+  },
+  {
+    name: "@algorithm-learning/plugin-visualization",
+    options: {
+      dataStructures: ["binary-tree", "graph"],
+      encoding: ["utf8", "ascii"],
+      animation: {
+        defaultSpeed: "normal",
+        enableControls: true
+      }
+    }
+  }
+]
+```
+
+### 插件默认配置
+- 为插件提供合理的默认配置
+- 支持部分配置覆盖
+
+```typescript
+// ✅ 推荐：插件默认配置
+const defaultPlaygroundConfig: PlaygroundPluginOptions = {
+  templates: ["demo", "exercise", "test"],
+  defaultLanguage: "javascript",
+  supportedLanguages: ["javascript", "python", "java", "cpp"],
+  theme: "auto"
+}
+
+function createPlaygroundPlugin(
+  userOptions: Partial<PlaygroundPluginOptions> = {}
+): PluginConfig<PlaygroundPluginOptions> {
+  return {
+    name: "@algorithm-learning/plugin-playground",
+    options: {
+      ...defaultPlaygroundConfig,
+      ...userOptions
+    }
+  }
+}
+
+// 使用示例
+const config = defineConfig({
+  plugins: [
+    // 使用默认配置
+    createPlaygroundPlugin(),
+    
+    // 部分覆盖配置
+    createPlaygroundPlugin({
+      defaultLanguage: "python",
+      templates: ["demo", "exercise"]
+    })
+  ]
+})
+```
+
+## 配置文档化
+
+### 内联文档
+- 为复杂配置项添加详细注释
+- 使用 JSDoc 注释提供类型提示
+
+```typescript
+// ✅ 推荐：详细的配置文档
+export default defineConfig({
+  /**
+   * 站点基础配置
+   * 这些配置会影响整个站点的基础信息
+   */
+  site: {
+    /** 网站标题，会显示在浏览器标签页和页面头部 */
+    title: "算法学习平台",
+    
+    /** 网站描述，用于 SEO 和社交媒体分享 */
+    description: "交互式算法与数据结构学习平台",
+    
+    /** 
+     * 站点的基础 URL 路径
+     * 对于 GitHub Pages 子路径部署，通常是 /repository-name/
+     */
+    baseUrl: "/learn-algorithm/"
+  },
+
+  /**
+   * 构建配置
+   * 控制网站的构建行为和输出
+   */
+  build: {
+    /** 构建输出目录 */
+    outDir: "dist",
+    
+    /** 静态资源目录 */
+    assetsDir: "assets",
+    
+    /** 是否生成 source map（开发时有用，生产环境建议关闭） */
+    sourcemap: false,
+    
+    /** 是否压缩代码（生产环境建议开启） */
+    minify: true
+  }
+})
+```
