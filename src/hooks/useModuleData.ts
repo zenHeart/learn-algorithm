@@ -11,7 +11,7 @@ export interface ModuleItem {
   difficulty?: 'simple' | 'medium' | 'hard'
   tags?: string[]
   isFlattened?: boolean // 标识是否为扁平化项（直接指向文件而非目录）
-  fileCount?: number    // 目录下的文件数量，用于调试和显示
+  fileCount?: number // 目录下的文件数量，用于调试和显示
 }
 
 export function useModuleData(moduleName: string) {
@@ -42,12 +42,15 @@ export function useModuleData(moduleName: string) {
         )
 
         // 分析目录结构，支持扁平化导航
-        const directoryAnalysis = new Map<string, {
-          files: string[]
-          weight: number
-          hasIndexOrReadme: boolean
-          indexFile?: string
-        }>()
+        const directoryAnalysis = new Map<
+          string,
+          {
+            files: string[]
+            weight: number
+            hasIndexOrReadme: boolean
+            indexFile?: string
+          }
+        >()
 
         // 分析每个一级子目录
         docs.forEach(doc => {
@@ -55,19 +58,18 @@ export function useModuleData(moduleName: string) {
           if (pathParts.length >= 2) {
             const firstLevelPath = `/${pathParts[0]}/${pathParts[1]}`
             const fileName = pathParts[pathParts.length - 1]
-            
+
             if (!directoryAnalysis.has(firstLevelPath)) {
               directoryAnalysis.set(firstLevelPath, {
                 files: [],
                 weight: extractWeight(firstLevelPath),
                 hasIndexOrReadme: false,
-                indexFile: undefined
               })
             }
-            
+
             const dirInfo = directoryAnalysis.get(firstLevelPath)!
             dirInfo.files.push(doc.path)
-            
+
             // 检查是否为 index 或 README 文件
             if (fileName === 'index' || fileName === 'README') {
               dirInfo.hasIndexOrReadme = true
@@ -76,7 +78,10 @@ export function useModuleData(moduleName: string) {
           }
         })
 
-        console.log(`📂 Directory analysis:`, Array.from(directoryAnalysis.entries()))
+        console.log(
+          `📂 Directory analysis:`,
+          Array.from(directoryAnalysis.entries())
+        )
 
         // 为每个目录生成卡片数据
         const moduleItems: ModuleItem[] = []
@@ -93,9 +98,10 @@ export function useModuleData(moduleName: string) {
           let actualPath = dirPath
 
           // 判断是否应该扁平化：只有一个文件且是 index.md 或 README.md
-          const shouldFlatten = dirInfo.files.length === 1 && 
-                               dirInfo.hasIndexOrReadme && 
-                               dirInfo.indexFile
+          const shouldFlatten =
+            dirInfo.files.length === 1 &&
+            dirInfo.hasIndexOrReadme &&
+            dirInfo.indexFile
 
           if (shouldFlatten) {
             isFlattened = true
@@ -107,7 +113,7 @@ export function useModuleData(moduleName: string) {
           try {
             const targetPath = isFlattened ? actualPath : `${dirPath}/index`
             const doc = await loadDocument(targetPath, true) // 使用静默模式
-            
+
             // 如果有文档，使用其元数据
             if (doc?.frontmatter) {
               const meta = doc.frontmatter
@@ -125,18 +131,24 @@ export function useModuleData(moduleName: string) {
           if (isCancelled) return
 
           // 创建卡片项
-          moduleItems.push({
+          const moduleItem: ModuleItem = {
             id: dirPath.replace(/^\//, '').replace(/\//g, '-'),
             title,
             description,
             path: actualPath, // 使用实际路径（可能是文件路径）
             weight,
-            difficulty,
             tags,
             icon: getModuleIcon(dirPath, moduleName),
             isFlattened,
             fileCount: dirInfo.files.length,
-          })
+          }
+
+          // 只有当 difficulty 有值时才设置
+          if (difficulty) {
+            moduleItem.difficulty = difficulty
+          }
+
+          moduleItems.push(moduleItem)
         }
 
         if (isCancelled) return
@@ -178,6 +190,10 @@ function extractTitleFromPath(path: string): string {
   const segments = path.split('/').filter(Boolean)
   const lastSegment = segments[segments.length - 1]
 
+  if (!lastSegment) {
+    return 'Untitled'
+  }
+
   return lastSegment
     .replace(/^\d+\.?\s*/, '') // 移除数字前缀
     .replace(/[-_]/g, ' ') // 替换连字符和下划线
@@ -190,9 +206,14 @@ function extractTitleFromPath(path: string): string {
 function extractWeight(path: string): number {
   const segments = path.split('/').filter(Boolean)
   const lastSegment = segments[segments.length - 1]
+  
+  if (!lastSegment) {
+    return 999
+  }
+  
   const numberMatch = lastSegment.match(/^(\d+)\.?/)
 
-  if (numberMatch) {
+  if (numberMatch && numberMatch[1]) {
     return parseInt(numberMatch[1], 10)
   }
 

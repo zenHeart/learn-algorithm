@@ -1,8 +1,51 @@
 import React from 'react'
 
+// 定义组件 props 类型
+interface CodeBlockProps {
+  children: React.ReactNode
+  className?: string
+  [key: string]: any
+}
+
+interface HeadingProps {
+  level: 1 | 2 | 3 | 4 | 5 | 6
+  children: React.ReactNode
+  [key: string]: any
+}
+
+interface ComponentProps {
+  children: React.ReactNode
+  [key: string]: any
+}
+
+interface LinkProps {
+  href?: string
+  children: React.ReactNode
+  [key: string]: any
+}
+
+// 辅助函数：从 ReactNode 提取文本内容
+function extractTextFromNode(node: React.ReactNode): string {
+  if (typeof node === 'string') {
+    return node
+  }
+  if (typeof node === 'number') {
+    return String(node)
+  }
+  if (React.isValidElement(node)) {
+    // @ts-ignore
+    return extractTextFromNode(node.props.children)
+  }
+  if (Array.isArray(node)) {
+    return node.map(extractTextFromNode).join('')
+  }
+  return ''
+}
+
 // 自定义代码块组件
-function CodeBlock({ children, className, ...props }: any) {
+function CodeBlock({ children, className, ...props }: CodeBlockProps) {
   const language = className?.replace('language-', '') || 'text'
+  const textContent = extractTextFromNode(children)
 
   return (
     <div className='relative my-4 max-w-full overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700'>
@@ -11,7 +54,7 @@ function CodeBlock({ children, className, ...props }: any) {
         <div className='flex items-center justify-between bg-gray-100 px-4 py-2 text-xs font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300'>
           <span className='uppercase'>{language}</span>
           <button
-            onClick={() => navigator.clipboard?.writeText(children)}
+            onClick={() => navigator.clipboard?.writeText(textContent)}
             className='text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
             title='复制代码'
           >
@@ -41,7 +84,7 @@ function CodeBlock({ children, className, ...props }: any) {
 }
 
 // 自定义内联代码组件
-function InlineCode({ children, ...props }: any) {
+function InlineCode({ children, ...props }: ComponentProps) {
   return (
     <code
       className='rounded border border-gray-200 bg-gray-100 px-1.5 py-0.5 font-mono text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100'
@@ -53,7 +96,7 @@ function InlineCode({ children, ...props }: any) {
 }
 
 // 自定义引用块组件
-function Blockquote({ children, ...props }: any) {
+function Blockquote({ children, ...props }: ComponentProps) {
   return (
     <blockquote
       className='my-4 border-l-4 border-blue-500 bg-blue-50 py-2 pl-4 text-gray-800 italic dark:bg-blue-900/20 dark:text-gray-200'
@@ -65,7 +108,7 @@ function Blockquote({ children, ...props }: any) {
 }
 
 // 自定义表格组件
-function Table({ children, ...props }: any) {
+function Table({ children, ...props }: ComponentProps) {
   return (
     <div className='my-6 max-w-full overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700'>
       <table className='min-w-full table-auto text-sm' {...props}>
@@ -75,7 +118,7 @@ function Table({ children, ...props }: any) {
   )
 }
 
-function TableHeader({ children, ...props }: any) {
+function TableHeader({ children, ...props }: ComponentProps) {
   return (
     <thead className='bg-gray-50 dark:bg-gray-800' {...props}>
       {children}
@@ -83,7 +126,7 @@ function TableHeader({ children, ...props }: any) {
   )
 }
 
-function TableRow({ children, ...props }: any) {
+function TableRow({ children, ...props }: ComponentProps) {
   return (
     <tr
       className='border-t border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800/50'
@@ -94,7 +137,7 @@ function TableRow({ children, ...props }: any) {
   )
 }
 
-function TableCell({ children, ...props }: any) {
+function TableCell({ children, ...props }: ComponentProps) {
   return (
     <td
       className='px-4 py-2 text-sm text-gray-900 dark:text-gray-100'
@@ -105,7 +148,7 @@ function TableCell({ children, ...props }: any) {
   )
 }
 
-function TableHeaderCell({ children, ...props }: any) {
+function TableHeaderCell({ children, ...props }: ComponentProps) {
   return (
     <th
       className='px-4 py-2 text-left text-sm font-semibold text-gray-900 dark:text-gray-100'
@@ -117,7 +160,7 @@ function TableHeaderCell({ children, ...props }: any) {
 }
 
 // 自定义链接组件
-function Link({ href, children, ...props }: any) {
+function Link({ href, children, ...props }: LinkProps) {
   // 内部链接
   if (href?.startsWith('/') || href?.startsWith('#')) {
     return (
@@ -161,8 +204,7 @@ function Link({ href, children, ...props }: any) {
 }
 
 // 自定义标题组件
-function Heading({ level, children, ...props }: any) {
-  const Component = `h${level}` as keyof JSX.IntrinsicElements
+function Heading({ level, children, ...props }: HeadingProps) {
   const sizeClasses = {
     1: 'text-3xl font-bold mt-8 mb-4',
     2: 'text-2xl font-bold mt-6 mb-3',
@@ -172,14 +214,16 @@ function Heading({ level, children, ...props }: any) {
     6: 'text-sm font-semibold mt-2 mb-1',
   }
 
-  return (
-    <Component
-      className={`text-gray-900 dark:text-white ${sizeClasses[level as keyof typeof sizeClasses]}`}
-      {...props}
-    >
-      {children}
-    </Component>
+  const HeadingComponent = React.createElement(
+    `h${level}`,
+    {
+      className: `text-gray-900 dark:text-white ${sizeClasses[level]}`,
+      ...props,
+    },
+    children
   )
+
+  return HeadingComponent
 }
 
 // 信息提示框组件
@@ -225,16 +269,16 @@ function InfoBox({
 // MDX 组件映射
 export const mdxComponents = {
   // 基础元素
-  h1: props => <Heading level={1} {...props} />,
-  h2: props => <Heading level={2} {...props} />,
-  h3: props => <Heading level={3} {...props} />,
-  h4: props => <Heading level={4} {...props} />,
-  h5: props => <Heading level={5} {...props} />,
-  h6: props => <Heading level={6} {...props} />,
+  h1: (props: ComponentProps) => <Heading level={1} {...props} />,
+  h2: (props: ComponentProps) => <Heading level={2} {...props} />,
+  h3: (props: ComponentProps) => <Heading level={3} {...props} />,
+  h4: (props: ComponentProps) => <Heading level={4} {...props} />,
+  h5: (props: ComponentProps) => <Heading level={5} {...props} />,
+  h6: (props: ComponentProps) => <Heading level={6} {...props} />,
 
   // 代码相关
-  pre: props => <CodeBlock {...props} />,
-  code: props => {
+  pre: (props: ComponentProps) => <CodeBlock {...props} />,
+  code: (props: ComponentProps & { className?: string }) => {
     // 如果是在 pre 标签内，返回原始 code
     if (props.className) {
       return <code {...props} />
@@ -250,7 +294,7 @@ export const mdxComponents = {
   // 表格
   table: Table,
   thead: TableHeader,
-  tbody: props => <tbody {...props} />,
+  tbody: (props: ComponentProps) => <tbody {...props} />,
   tr: TableRow,
   td: TableCell,
   th: TableHeaderCell,
@@ -259,12 +303,12 @@ export const mdxComponents = {
   InfoBox,
 
   // YAML 前置内容样式处理
-  section: (props: any) => (
+  section: (props: ComponentProps) => (
     <section className='max-w-full overflow-x-auto' {...props} />
   ),
 
   // 段落
-  p: (props: any) => (
+  p: (props: ComponentProps) => (
     <p
       className='mb-4 max-w-full leading-relaxed break-words text-gray-700 dark:text-gray-300'
       {...props}
@@ -272,22 +316,22 @@ export const mdxComponents = {
   ),
 
   // 列表
-  ul: (props: any) => (
+  ul: (props: ComponentProps) => (
     <ul
       className='mb-4 list-inside list-disc space-y-1 text-gray-700 dark:text-gray-300'
       {...props}
     />
   ),
-  ol: (props: any) => (
+  ol: (props: ComponentProps) => (
     <ol
       className='mb-4 list-inside list-decimal space-y-1 text-gray-700 dark:text-gray-300'
       {...props}
     />
   ),
-  li: (props: any) => <li className='ml-4' {...props} />,
+  li: (props: ComponentProps) => <li className='ml-4' {...props} />,
 
   // 分隔线
-  hr: (props: any) => (
+  hr: (props: ComponentProps) => (
     <hr className='my-8 border-gray-300 dark:border-gray-600' {...props} />
   ),
 }

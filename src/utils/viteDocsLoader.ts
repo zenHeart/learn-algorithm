@@ -92,7 +92,7 @@ export class ViteDocsLoader {
     }
 
     const docs = await this.loadModuleDocs(moduleName)
-    const navigation = this.buildNavigationTree(docs, moduleName)
+    const navigation = this.buildNavigationTree(docs)
 
     // 缓存结果
     this.navigationCache.set(moduleName, navigation)
@@ -195,11 +195,15 @@ export class ViteDocsLoader {
       if (!silent) {
         console.warn(`❌ Document not found: ${docPath}`)
         console.log('💡 Available paths for debugging:')
-        Object.keys(this.allModules).forEach(path => {
-          if (path.includes(cleanPath.split('/')[1])) {
-            console.log('  -', path)
-          }
-        })
+        const pathSegments = cleanPath.split('/')
+        const moduleSegment = pathSegments[1]
+        if (moduleSegment) {
+          Object.keys(this.allModules).forEach(path => {
+            if (path.includes(moduleSegment)) {
+              console.log('  -', path)
+            }
+          })
+        }
       }
 
       return null
@@ -233,9 +237,11 @@ export class ViteDocsLoader {
 
     for (let i = 0; i < segments.length; i++) {
       const segment = segments[i]
+      if (!segment) continue
+
       const numberMatch = segment.match(/^(\d+)\.?/)
 
-      if (numberMatch) {
+      if (numberMatch && numberMatch[1]) {
         // 数字前缀的权重
         weight +=
           parseInt(numberMatch[1], 10) * Math.pow(1000, segments.length - i - 1)
@@ -258,6 +264,10 @@ export class ViteDocsLoader {
     const segments = path.split('/').filter(Boolean)
     const lastSegment = segments[segments.length - 1]
 
+    if (!lastSegment) {
+      return 'Home'
+    }
+
     if (lastSegment === 'index') {
       // 如果是 index，使用父目录名
       const parentSegment = segments[segments.length - 2]
@@ -270,10 +280,7 @@ export class ViteDocsLoader {
   /**
    * 构建导航树结构
    */
-  private buildNavigationTree(
-    docs: DocInfo[],
-    moduleName: string
-  ): SidebarItem[] {
+  private buildNavigationTree(docs: DocInfo[]): SidebarItem[] {
     const tree = new Map<string, any>()
 
     // 按路径层级组织文档
@@ -284,6 +291,8 @@ export class ViteDocsLoader {
       // 跳过模块名，从第二级开始
       for (let i = 1; i < pathParts.length; i++) {
         const part = pathParts[i]
+        if (!part) continue
+
         const isLast = i === pathParts.length - 1
 
         if (!currentLevel.has(part)) {
@@ -296,10 +305,10 @@ export class ViteDocsLoader {
 
         // 添加文档到当前层级
         if (isLast) {
-          currentLevel.get(part).docs.push(doc)
+          currentLevel.get(part)!.docs.push(doc)
         }
 
-        currentLevel = currentLevel.get(part).items
+        currentLevel = currentLevel.get(part)!.items
       }
     }
 
@@ -322,7 +331,7 @@ export class ViteDocsLoader {
       if (value.docs.length === 1) {
         const doc = value.docs[0]
         const fileName = doc.path.split('/').pop() || ''
-        
+
         // 只有单个 index 或 README 文件时，直接扁平化
         if (fileName === 'index' || fileName === 'README') {
           item.link = doc.path
@@ -373,13 +382,17 @@ export class ViteDocsLoader {
       if (!item.link && item.items && item.items.length === 1) {
         const singleChild = item.items[0]
         // 如果子项也是单一文件，则直接使用子项，避免多层嵌套
-        if (singleChild.link && (!singleChild.items || singleChild.items.length === 0)) {
+        if (
+          singleChild &&
+          singleChild.link &&
+          (!singleChild.items || singleChild.items.length === 0)
+        ) {
           item.link = singleChild.link
-          
+
           // 检查子项是否是 index/README 类型的文件
           const childPath = singleChild.link || ''
           const fileName = childPath.split('/').pop() || ''
-          
+
           // 如果是 index 或 README 文件，保持父级目录名称
           if (fileName === 'index' || fileName === 'README') {
             // 保持 item.text 不变（即目录名称）
@@ -387,7 +400,7 @@ export class ViteDocsLoader {
             // 如果是其他文件，使用子项的标题
             item.text = singleChild.text
           }
-          
+
           delete item.items // 移除子项，直接扁平化
         }
       }
@@ -435,8 +448,9 @@ export class ViteDocsLoader {
     const currentIndex = docs.findIndex(doc => doc.path === currentPath)
 
     return {
-      prev: currentIndex > 0 ? docs[currentIndex - 1] : null,
-      next: currentIndex < docs.length - 1 ? docs[currentIndex + 1] : null,
+      prev: currentIndex > 0 ? docs[currentIndex - 1] || null : null,
+      next:
+        currentIndex < docs.length - 1 ? docs[currentIndex + 1] || null : null,
     }
   }
 
@@ -460,7 +474,8 @@ export function useViteDocs() {
       viteDocsLoader.loadModuleDocs(moduleName),
     generateNavigation: (moduleName: string) =>
       viteDocsLoader.generateModuleNavigation(moduleName),
-    loadDocument: (docPath: string, silent?: boolean) => viteDocsLoader.loadDocument(docPath, silent),
+    loadDocument: (docPath: string, silent?: boolean) =>
+      viteDocsLoader.loadDocument(docPath, silent),
     getDocumentMeta: (docPath: string) =>
       viteDocsLoader.getDocumentMeta(docPath),
     getAdjacentPages: (moduleName: string, currentPath: string) =>

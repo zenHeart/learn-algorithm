@@ -12,66 +12,52 @@ export function useTheme() {
     return 'system'
   })
 
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() => {
-    // 初始化时确定正确的解析主题
-    const saved = localStorage.getItem('theme') as Theme | null
-    if (saved === 'dark') return 'dark'
-    if (saved === 'light') return 'light'
-    // system 或未设置时，使用系统偏好
-    return window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light'
-  })
-
-  // 初始化时立即应用主题
-  useEffect(() => {
-    const root = window.document.documentElement
-    root.classList.remove('light', 'dark')
-    if (resolvedTheme === 'dark') {
-      root.classList.add('dark')
+  // 计算实际应用的主题
+  const getResolvedTheme = (currentTheme: Theme): 'light' | 'dark' => {
+    if (currentTheme === 'system') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light'
     }
-  }, []) // 只在组件挂载时运行一次
+    return currentTheme
+  }
 
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() =>
+    getResolvedTheme(theme)
+  )
+
+  // 统一的主题应用逻辑
   useEffect(() => {
     const root = window.document.documentElement
+    const newResolvedTheme = getResolvedTheme(theme)
 
     // 移除之前的主题类
     root.classList.remove('light', 'dark')
 
-    let effectiveTheme: 'light' | 'dark'
-
-    if (theme === 'system') {
-      // 使用系统偏好
-      effectiveTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light'
-    } else {
-      effectiveTheme = theme
-    }
-
-    // 应用主题类 (Tailwind 只需要 'dark' 类)
-    if (effectiveTheme === 'dark') {
+    // 应用新主题类 (Tailwind 只需要 'dark' 类)
+    if (newResolvedTheme === 'dark') {
       root.classList.add('dark')
     }
-    setResolvedTheme(effectiveTheme)
+
+    setResolvedTheme(newResolvedTheme)
 
     // 保存到 localStorage
     localStorage.setItem('theme', theme)
   }, [theme])
 
+  // 监听系统主题变化
   useEffect(() => {
-    // 监听系统主题变化
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
 
     const handleChange = () => {
       if (theme === 'system') {
-        const effectiveTheme = mediaQuery.matches ? 'dark' : 'light'
+        const newResolvedTheme = mediaQuery.matches ? 'dark' : 'light'
         const root = window.document.documentElement
         root.classList.remove('light', 'dark')
-        if (effectiveTheme === 'dark') {
+        if (newResolvedTheme === 'dark') {
           root.classList.add('dark')
         }
-        setResolvedTheme(effectiveTheme)
+        setResolvedTheme(newResolvedTheme)
       }
     }
 

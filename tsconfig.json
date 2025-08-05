@@ -38,9 +38,7 @@
   "include": [
     "src",
     ".sites/types",
-    "src/vite-env.d.ts",
-    "tailwind.config.ts",
-    "postcss.config.ts"
+    "src/vite-env.d.ts"
   ],
   "exclude": [
     "node_modules",

@@ -56,15 +56,15 @@ export interface WeightCalculator {
 export class DefaultWeightCalculator implements WeightCalculator {
   calculateWeight(dirName: string, fileName: string, index: number): number {
     const numberMatch = dirName.match(/^(\d+)\.?/)
-    if (numberMatch) {
+    if (numberMatch && numberMatch[1]) {
       return parseInt(numberMatch[1], 10)
     }
-    
+
     const fileNumberMatch = fileName.match(/^(\d+)\.?/)
-    if (fileNumberMatch) {
+    if (fileNumberMatch && fileNumberMatch[1]) {
       return parseInt(fileNumberMatch[1], 10)
     }
-    
+
     return 999 + index
   }
 }

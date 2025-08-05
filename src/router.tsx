@@ -1,6 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom'
 import MainLayout from '@/components/layout/MainLayout'
-import { RouterErrorElement } from '@/components/ui/ErrorBoundary'
 import HomePage from '@/pages/HomePage'
 import DataStructuresPage from '@/pages/DataStructuresPage'
 import AlgorithmsPage from '@/pages/AlgorithmsPage'

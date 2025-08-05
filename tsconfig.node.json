@@ -10,7 +10,10 @@
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
+    "composite": true,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "declarationMap": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "verbatimModuleSyntax": true

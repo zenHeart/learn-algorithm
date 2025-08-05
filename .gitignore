@@ -99,6 +99,8 @@ Thumbs.db
 
 # TypeScript
 *.tsbuildinfo
+*.d.ts
+*.d.ts.map
 
 # Vite
 .vite

@@ -219,10 +219,12 @@ export default function DetailPage() {
     <div className='min-h-screen bg-gray-50 dark:bg-gray-900'>
       <div className='flex'>
         {/* 侧边栏 - 桌面端固定，移动端隐藏 */}
-        <Sidebar
-          module={currentModule}
-          className='fixed top-16 left-0 hidden h-[calc(100vh-4rem)] w-64 overflow-y-auto lg:block'
-        />
+        {currentModule && (
+          <Sidebar
+            module={currentModule}
+            className='fixed top-16 left-0 hidden h-[calc(100vh-4rem)] w-64 overflow-y-auto lg:block'
+          />
+        )}
 
         {/* 移动端侧边栏遮罩 */}
         {isMobileSidebarOpen && (
@@ -233,16 +235,18 @@ export default function DetailPage() {
         )}
 
         {/* 移动端侧边栏 */}
-        <div
-          className={`fixed top-16 left-0 z-50 h-[calc(100vh-4rem)] w-64 transform transition-transform duration-300 ease-in-out lg:hidden ${
-            isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
-        >
-          <Sidebar
-            module={currentModule}
-            className='h-full w-full overflow-y-auto'
-          />
-        </div>
+        {currentModule && (
+          <div
+            className={`fixed top-16 left-0 z-50 h-[calc(100vh-4rem)] w-64 transform transition-transform duration-300 ease-in-out lg:hidden ${
+              isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+            }`}
+          >
+            <Sidebar
+              module={currentModule}
+              className='h-full w-full overflow-y-auto'
+            />
+          </div>
+        )}
 
         {/* 主内容区 - 适配移动端 */}
         <main className='flex-1 lg:ml-64'>
