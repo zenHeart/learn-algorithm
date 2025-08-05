@@ -165,9 +165,11 @@ function MDXContent({ docPath }: MDXContentProps) {
         </div>
       )}
 
-      {/* MDX 内容 */}
-      <article className='prose prose-lg dark:prose-invert max-w-none'>
-        <MDXComponent />
+      {/* MDX 内容 - 移动端优化 */}
+      <article className='prose prose-sm sm:prose-lg prose-gray dark:prose-invert prose-headings:break-words prose-p:break-words prose-pre:overflow-x-auto prose-pre:text-xs sm:prose-pre:text-sm prose-table:overflow-x-auto prose-img:max-w-full prose-code:break-words prose-code:text-xs sm:prose-code:text-sm max-w-none'>
+        <MDXProvider>
+          <MDXComponent />
+        </MDXProvider>
       </article>
     </div>
   )
@@ -176,6 +178,7 @@ function MDXContent({ docPath }: MDXContentProps) {
 export default function DetailPage() {
   const { module, category, topic } = useParams()
   const navigate = useNavigate()
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
 
   // 构建文档路径
   const buildDocPath = () => {
@@ -215,18 +218,61 @@ export default function DetailPage() {
   return (
     <div className='min-h-screen bg-gray-50 dark:bg-gray-900'>
       <div className='flex'>
-        {/* 侧边栏 */}
+        {/* 侧边栏 - 桌面端固定，移动端隐藏 */}
         <Sidebar
           module={currentModule}
-          className='fixed top-16 left-0 h-[calc(100vh-4rem)] overflow-y-auto'
+          className='fixed top-16 left-0 hidden h-[calc(100vh-4rem)] w-64 overflow-y-auto lg:block'
         />
 
-        {/* 主内容区 */}
-        <main className='ml-64 flex-1'>
-          <div className='mx-auto max-w-4xl px-6 py-8'>
-            {/* 面包屑导航 */}
-            <nav className='mb-8'>
-              <ol className='flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-300'>
+        {/* 移动端侧边栏遮罩 */}
+        {isMobileSidebarOpen && (
+          <div
+            className='bg-opacity-50 fixed inset-0 z-40 bg-black lg:hidden'
+            onClick={() => setIsMobileSidebarOpen(false)}
+          />
+        )}
+
+        {/* 移动端侧边栏 */}
+        <div
+          className={`fixed top-16 left-0 z-50 h-[calc(100vh-4rem)] w-64 transform transition-transform duration-300 ease-in-out lg:hidden ${
+            isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          <Sidebar
+            module={currentModule}
+            className='h-full w-full overflow-y-auto'
+          />
+        </div>
+
+        {/* 主内容区 - 适配移动端 */}
+        <main className='flex-1 lg:ml-64'>
+          <div className='mx-auto max-w-4xl overflow-x-hidden px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8'>
+            {/* 移动端菜单按钮 */}
+            <div className='mb-4 lg:hidden'>
+              <button
+                onClick={() => setIsMobileSidebarOpen(true)}
+                className='flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm ring-1 ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-600 dark:hover:bg-gray-700'
+              >
+                <svg
+                  className='h-5 w-5'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth={2}
+                    d='M4 6h16M4 12h16M4 18h16'
+                  />
+                </svg>
+                目录导航
+              </button>
+            </div>
+
+            {/* 面包屑导航 - 移动端优化 */}
+            <nav className='mb-6 sm:mb-8'>
+              <ol className='flex flex-wrap items-center space-x-1 text-xs text-gray-600 sm:space-x-2 sm:text-sm dark:text-gray-300'>
                 <li>
                   <button
                     onClick={() => navigate('/')}

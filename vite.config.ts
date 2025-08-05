@@ -6,6 +6,7 @@ import remarkGfm from 'remark-gfm'
 import remarkFrontmatter from 'remark-frontmatter'
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
 import rehypeKatex from 'rehype-katex'
+import rehypeHighlight from 'rehype-highlight'
 import { resolve } from 'node:path'
 import { fileURLToPath, URL } from 'node:url'
 
@@ -23,7 +24,30 @@ export default defineConfig({
         remarkMath,
         remarkGfm,
       ],
-      rehypePlugins: [rehypeKatex],
+      rehypePlugins: [
+        rehypeKatex,
+        [
+          rehypeHighlight,
+          {
+            detect: true,
+            subset: [
+              'javascript',
+              'typescript',
+              'python',
+              'java',
+              'c',
+              'cpp',
+              'go',
+              'rust',
+              'html',
+              'css',
+              'json',
+              'bash',
+              'shell',
+            ],
+          },
+        ],
+      ],
       providerImportSource: '@mdx-js/react',
       // 移除 development 选项，使用默认配置
     }),

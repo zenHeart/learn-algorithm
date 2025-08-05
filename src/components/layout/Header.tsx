@@ -9,7 +9,7 @@ const navigation = [
   { name: 'LeetCode', href: '/leetcode' },
   { name: '数学基础', href: '/math' },
   { name: '编码原理', href: '/encode' },
-  { name: '在线验证', href: '/playground' }
+  { name: '在线验证', href: '/playground' },
 ]
 
 export default function Header() {
@@ -24,31 +24,34 @@ export default function Header() {
   }
 
   return (
-    <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+    <header className='fixed top-0 right-0 left-0 z-50 border-b border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800'>
+      <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
+        <div className='flex h-16 items-center justify-between'>
           {/* Logo */}
-          <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">AL</span>
+          <div className='flex min-w-0 flex-1 items-center pr-4'>
+            <Link
+              to='/'
+              className='flex min-w-0 items-center space-x-2 sm:space-x-3'
+            >
+              <div className='flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-blue-600'>
+                <span className='text-sm font-bold text-white'>AL</span>
               </div>
-              <span className="text-xl font-bold text-gray-900 dark:text-white">
+              <span className='truncate text-base font-bold text-gray-900 sm:text-lg dark:text-white'>
                 算法学习平台
               </span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-            {navigation.map((item) => (
+          <nav className='hidden space-x-8 md:flex'>
+            {navigation.map(item => (
               <Link
                 key={item.name}
                 to={item.href}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
                   isActive(item.href)
                     ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
-                    : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+                    : 'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400'
                 }`}
               >
                 {item.name}
@@ -57,17 +60,33 @@ export default function Header() {
           </nav>
 
           {/* Theme Toggle & Mobile Menu Button */}
-          <div className="flex items-center space-x-4">
+          <div className='flex flex-shrink-0 items-center space-x-2'>
             <ThemeToggle />
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+              className='rounded-md p-2 text-gray-700 hover:bg-gray-100 md:hidden dark:text-gray-300 dark:hover:bg-gray-700'
+              aria-label={isMenuOpen ? '关闭菜单' : '打开菜单'}
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                className='h-6 w-6'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
                 {isMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth={2}
+                    d='M6 18L18 6M6 6l12 12'
+                  />
                 ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth={2}
+                    d='M4 6h16M4 12h16M4 18h16'
+                  />
                 )}
               </svg>
             </button>
@@ -76,17 +95,17 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700">
-            <nav className="space-y-2">
-              {navigation.map((item) => (
+          <div className='border-t border-gray-200 py-4 md:hidden dark:border-gray-700'>
+            <nav className='space-y-2'>
+              {navigation.map(item => (
                 <Link
                   key={item.name}
                   to={item.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  className={`block rounded-md px-3 py-2 text-base font-medium transition-colors ${
                     isActive(item.href)
                       ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
-                      : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+                      : 'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400'
                   }`}
                 >
                   {item.name}

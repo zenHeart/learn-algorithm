@@ -102,7 +102,10 @@ export class ViteDocsLoader {
   /**
    * 异步加载单个文档
    */
-  async loadDocument(docPath: string): Promise<MDXModule | null> {
+  async loadDocument(
+    docPath: string,
+    silent = false
+  ): Promise<MDXModule | null> {
     try {
       // 标准化路径
       let cleanPath = docPath.startsWith('/') ? docPath : `/${docPath}`
@@ -120,67 +123,90 @@ export class ViteDocsLoader {
         `/docs${cleanPath}/index.md`,
       ]
 
-      console.log('🔍 Trying to load document:', docPath)
-      console.log('🧹 Cleaned path:', cleanPath)
-      console.log('🎯 Possible file paths:', possiblePaths)
-      console.log(
-        '📁 Available modules:',
-        Object.keys(this.allModules).slice(0, 10),
-        '...'
-      )
+      if (!silent) {
+        console.log('🔍 Trying to load document:', docPath)
+        console.log('🧹 Cleaned path:', cleanPath)
+        console.log('🎯 Possible file paths:', possiblePaths)
+      }
 
       for (const path of possiblePaths) {
         if (this.allModules[path]) {
-          console.log('✅ Found module for path:', path)
+          if (!silent) {
+            console.log('✅ Found module for path:', path)
+          }
           try {
             // 使用预加载的模块映射
             const moduleLoader = this.allModules[path]
             const module = await moduleLoader()
 
-            console.log('🎉 Successfully loaded module:', typeof module, module)
-            console.log('🔍 Module keys:', Object.keys(module))
-            console.log('🎯 Module default type:', typeof module.default)
-
             // 检查模块结构 - MDX 模块应该有 default 导出
             if (module && typeof module === 'object') {
               if ('default' in module) {
                 const component = module.default
-                console.log('✅ Found default export:', typeof component)
-                
+
                 // MDX 组件是函数类型
                 if (typeof component === 'function') {
+                  if (!silent) {
+                    console.log('✅ Successfully loaded document:', docPath)
+                  }
                   return {
                     default: component as React.ComponentType,
                     frontmatter: (module as any)?.frontmatter || {},
                   } as MDXModule
                 } else {
-                  console.warn('⚠️ Default export is not a function:', typeof component, component)
+                  if (!silent) {
+                    console.warn(
+                      '⚠️ Default export is not a function:',
+                      typeof component,
+                      component
+                    )
+                  }
                 }
               } else {
-                console.error('❌ Module has no default export')
-                console.error('Available exports:', Object.keys(module))
+                if (!silent) {
+                  console.error('❌ Module has no default export')
+                  console.error('Available exports:', Object.keys(module))
+                }
               }
             } else {
-              console.error('❌ Invalid module structure:', typeof module, module)
+              if (!silent) {
+                console.error(
+                  '❌ Invalid module structure:',
+                  typeof module,
+                  module
+                )
+              }
             }
             continue
           } catch (loadError) {
-            console.error('❌ Failed to load module at path:', path, loadError)
+            if (!silent) {
+              console.error(
+                '❌ Failed to load module at path:',
+                path,
+                loadError
+              )
+            }
             continue
           }
         }
       }
 
-      console.warn(`❌ Document not found: ${docPath}`)
-      console.log('💡 Available paths for debugging:')
-      Object.keys(this.allModules).forEach(path => {
-        if (path.includes(cleanPath.split('/')[1])) {
-          console.log('  -', path)
-        }
-      })
+      // 只在非静默模式下输出调试信息
+      if (!silent) {
+        console.warn(`❌ Document not found: ${docPath}`)
+        console.log('💡 Available paths for debugging:')
+        Object.keys(this.allModules).forEach(path => {
+          if (path.includes(cleanPath.split('/')[1])) {
+            console.log('  -', path)
+          }
+        })
+      }
+
       return null
     } catch (error) {
-      console.error(`💥 Failed to load document ${docPath}:`, error)
+      if (!silent) {
+        console.error(`💥 Failed to load document ${docPath}:`, error)
+      }
       return null
     }
   }
@@ -292,36 +318,48 @@ export class ViteDocsLoader {
         collapsed: false,
       }
 
-      // 查找 index 文档作为目录链接
-      const indexDoc = value.docs.find(
-        (doc: DocInfo) =>
-          doc.path.endsWith('/index') || doc.path.endsWith(`/${key}`)
-      )
-
-      if (indexDoc) {
-        item.link = indexDoc.path
-        item.text = indexDoc.title
-      } else if (value.docs.length === 1) {
-        // 如果只有一个文档，直接使用它
+      // 扁平化逻辑：如果只有一个文档（index 或 README），直接使用它，不创建嵌套结构
+      if (value.docs.length === 1) {
         const doc = value.docs[0]
-        item.link = doc.path
-        item.text = doc.title
-      }
-
-      // 添加其他文档作为子项
-      const nonIndexDocs = value.docs.filter(
-        (doc: DocInfo) => !doc.path.endsWith('/index') && doc !== indexDoc
-      )
-
-      if (nonIndexDocs.length > 0) {
-        if (!item.items) item.items = []
-        item.items.push(
-          ...nonIndexDocs.map((doc: DocInfo) => ({
-            text: doc.title,
-            link: doc.path,
-            collapsed: false,
-          }))
+        const fileName = doc.path.split('/').pop() || ''
+        
+        // 只有单个 index 或 README 文件时，直接扁平化
+        if (fileName === 'index' || fileName === 'README') {
+          item.link = doc.path
+          // 保持目录名称作为标题，不使用文件标题
+          // item.text 已经在第317行通过 this.formatTitle(key) 设置为正确的目录名
+        } else {
+          // 如果是其他单个文件，使用文件标题
+          item.link = doc.path
+          item.text = doc.title
+        }
+      } else {
+        // 多个文档时，查找 index 文档作为目录链接
+        const indexDoc = value.docs.find(
+          (doc: DocInfo) =>
+            doc.path.endsWith('/index') || doc.path.endsWith(`/${key}`)
         )
+
+        if (indexDoc) {
+          item.link = indexDoc.path
+          item.text = indexDoc.title
+        }
+
+        // 添加其他文档作为子项
+        const nonIndexDocs = value.docs.filter(
+          (doc: DocInfo) => !doc.path.endsWith('/index') && doc !== indexDoc
+        )
+
+        if (nonIndexDocs.length > 0) {
+          if (!item.items) item.items = []
+          item.items.push(
+            ...nonIndexDocs.map((doc: DocInfo) => ({
+              text: doc.title,
+              link: doc.path,
+              collapsed: false,
+            }))
+          )
+        }
       }
 
       // 如果有子目录，递归处理
@@ -329,6 +367,29 @@ export class ViteDocsLoader {
         const subItems = this.convertMapToSidebar(value.items)
         if (!item.items) item.items = []
         item.items.push(...subItems)
+      }
+
+      // 扁平化优化：如果当前项只有一个子项且自己没有直接链接，则提升子项
+      if (!item.link && item.items && item.items.length === 1) {
+        const singleChild = item.items[0]
+        // 如果子项也是单一文件，则直接使用子项，避免多层嵌套
+        if (singleChild.link && (!singleChild.items || singleChild.items.length === 0)) {
+          item.link = singleChild.link
+          
+          // 检查子项是否是 index/README 类型的文件
+          const childPath = singleChild.link || ''
+          const fileName = childPath.split('/').pop() || ''
+          
+          // 如果是 index 或 README 文件，保持父级目录名称
+          if (fileName === 'index' || fileName === 'README') {
+            // 保持 item.text 不变（即目录名称）
+          } else {
+            // 如果是其他文件，使用子项的标题
+            item.text = singleChild.text
+          }
+          
+          delete item.items // 移除子项，直接扁平化
+        }
       }
 
       items.push(item)
@@ -399,7 +460,7 @@ export function useViteDocs() {
       viteDocsLoader.loadModuleDocs(moduleName),
     generateNavigation: (moduleName: string) =>
       viteDocsLoader.generateModuleNavigation(moduleName),
-    loadDocument: (docPath: string) => viteDocsLoader.loadDocument(docPath),
+    loadDocument: (docPath: string, silent?: boolean) => viteDocsLoader.loadDocument(docPath, silent),
     getDocumentMeta: (docPath: string) =>
       viteDocsLoader.getDocumentMeta(docPath),
     getAdjacentPages: (moduleName: string, currentPath: string) =>
