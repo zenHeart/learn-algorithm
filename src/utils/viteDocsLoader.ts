@@ -416,7 +416,6 @@ export class ViteDocsLoader {
    */
   private formatTitle(pathSegment: string): string {
     return pathSegment
-      .replace(/^\d+\.?\s*/, '') // 移除数字前缀
       .replace(/[-_]/g, ' ') // 替换连字符和下划线
       .replace(/\b\w/g, l => l.toUpperCase()) // 首字母大写
   }
