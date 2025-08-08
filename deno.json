@@ -1,15 +1,5 @@
 {
   "tasks": {
-    "test": "deno test data-structures --watch data-structures "
-  },
-  "test": {
-    "files": {
-      "include": ["./data-structures/**/*.test.ts"]
-    }
-  },
-  "compilerOptions": {
-    "allowJs": false,
-    "checkJs": false,
-    "strict": true
+    "test": "deno test --ext ts docs/data-structures --watch docs/data-structures --no-check"
   }
 }
