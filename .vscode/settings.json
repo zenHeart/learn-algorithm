@@ -8,6 +8,6 @@
   "[shellscript]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
   },
-  "editor.indentSize": "3",
+  "editor.tabSize": "3",
   "typescript.tsdk": "node_modules/typescript/lib"
 }
