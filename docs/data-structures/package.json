@@ -8,5 +8,6 @@
   },
   "keywords": [],
   "author": "zenheart <zenheart_register@163.com>",
-  "license": "ISC"
+  "license": "ISC",
+  "type": "module"
 }

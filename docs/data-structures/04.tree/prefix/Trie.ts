@@ -52,26 +52,48 @@ class Trie {
         return false
       }
     }
-    // 这里是前缀匹配所以不用判断是不是单词
     return true
+  }
+  /**
+   * 证明单词的前缀在前缀树中存在匹配
+   * @param str
+   */
+  getPrefix(str: string): boolean | string {
+    let curPost = this.root
+    let prefix = ''
+
+    for (let i = 0; i < str.length; i++) {
+      const l = str[i]
+      if (curPost.children?.[l]) {
+        prefix += l
+        if (curPost.children?.[l]?.isEndOfWord) {
+          return prefix
+        } else {
+          curPost = curPost.children[l]
+        }
+      } else {
+        return false
+      }
+    }
+    return false
   }
 }
 
-// export default Trie
+// const trie = new Trie()
+// trie.insert('hello')
+// trie.insert('helium')
+// trie.insert('hero')
+// console.log(trie.getPrefix('hero111'))
+// console.log(JSON.stringify(trie.root, null, 2))
 
-const trie = new Trie()
-trie.insert('hello')
-trie.insert('helium')
-trie.insert('hero')
-console.log(JSON.stringify(trie.root, null, 2))
+// console.log(trie.search('hello')) // true
+// console.log(trie.search('helium')) // true
+// console.log(trie.search('hel')) // false
+// console.log(trie.search('c')) // false
 
-console.log(trie.search('hello')) // true
-console.log(trie.search('helium')) // true
-console.log(trie.search('hel')) // false
-console.log(trie.search('c')) // false
-
-console.log(trie.startWith('hello')) // true
-console.log(trie.startWith('helium')) // true
-console.log(trie.startWith('hel')) // true
-console.log(trie.startWith('c')) // false
-console.log(trie.startWith('h')) // false
+// console.log(trie.startWith('hello')) // true
+// console.log(trie.startWith('helium')) // true
+// console.log(trie.startWith('hel')) // true
+// console.log(trie.startWith('c')) // false
+// console.log(trie.startWith('h')) // false
+export default Trie
