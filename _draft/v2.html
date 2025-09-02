@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据结构概念卡片 - 完整版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .category-section {
+            margin-bottom: 60px;
+        }
+
+        .category-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .category-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .category-description {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.9);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--accent-color);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-header {
+            margin-bottom: 25px;
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .card-pronunciation {
+            font-size: 0.95rem;
+            color: #718096;
+            font-style: italic;
+            margin-bottom: 5px;
+        }
+
+        .card-translation {
+            font-size: 1rem;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .card-chinese {
+            font-size: 1.1rem;
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .visualization {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .description {
+            font-size: 0.9rem;
+            color: #4a5568;
+            line-height: 1.6;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .sub-card-badge {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        /* 颜色主题 */
+        .basic { --accent-color: #48bb78; }
+        .linear { --accent-color: #4299e1; }
+        .mapping { --accent-color: #ed8936; }
+        .tree { --accent-color: #9f7aea; }
+        .graph { --accent-color: #e53e3e; }
+        .composite { --accent-color: #38b2ac; }
+
+        /* 可视化元素样式 */
+        .array-viz {
+            display: flex;
+            gap: 3px;
+        }
+
+        .array-cell {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            background: white;
+        }
+
+        .array-cell.filled {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .node-circle {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            color: white;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin: 3px;
+        }
+
+        .linked-list-viz {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .list-node {
+            display: flex;
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .list-data {
+            background: var(--accent-color);
+            color: white;
+            padding: 12px;
+            font-weight: bold;
+        }
+
+        .list-pointer {
+            background: white;
+            padding: 12px 10px;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .stack-viz {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stack-item {
+            width: 80px;
+            background: var(--accent-color);
+            color: white;
+            padding: 10px;
+            margin: 2px 0;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .queue-viz {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .queue-item {
+            background: var(--accent-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .hash-table-viz {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3px;
+        }
+
+        .hash-cell {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.85rem;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hash-cell.filled {
+            background: var(--accent-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        .tree-viz {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .tree-level {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .graph-viz {
+            position: relative;
+            width: 150px;
+            height: 150px;
+        }
+
+        .vertex {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .edge-line {
+            position: absolute;
+            height: 2px;
+            background: var(--accent-color);
+            opacity: 0.7;
+        }
+
+        .arrow {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            margin: 0 5px;
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .card {
+                padding: 25px;
+            }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: #48bb78;
+            z-index: 1000;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <div class="header">
+        <h1 class="title">数据结构概念卡片</h1>
+        <p class="subtitle">Data Structure Concept Cards - 从基础到高级的可视化学习之旅</p>
+    </div>
+
+    <!-- 1. 数组 (Array) -->
+    <div class="category-section">
+        <div class="category-header">
+            <div class="difficulty-badge">基础 - Level 1</div>
+            <h2 class="category-title">1. 数组 Array</h2>
+            <p class="category-description">最基础的数据结构，连续内存存储相同类型的元素</p>
+        </div>
+        <div class="cards-grid">
+            <!-- 静态数组 -->
+            <div class="card basic">
+                <div class="card-header">
+                    <div class="sub-card-badge">基础</div>
+                    <h3 class="card-title">Static Array</h3>
+                    <p class="card-pronunciation">/ˈstætɪk əˈreɪ/</p>
+                    <p class="card-translation">static array</p>
+                    <p class="card-chinese">静态数组</p>
+                </div>
+                <div class="visualization">
+                    <div class="array-viz">
+                        <div class="array-cell filled">A</div>
+                        <div class="array-cell filled">B</div>
+                        <div class="array-cell filled">C</div>
+                        <div class="array-cell filled">D</div>
+                        <div class="array-cell filled">E</div>
+                    </div>
+                </div>
+                <div class="description">
+                    固定大小的连续内存块，编译时确定大小，访问效率高。
+                </div>
+            </div>
+
+            <!-- 动态数组 -->
+            <div class="card basic">
+                <div class="card-header">
+                    <div class="sub-card-badge">基础</div>
+                    <h3 class="card-title">Dynamic Array</h3>
+                    <p class="card-pronunciation">/daɪˈnæmɪk əˈreɪ/</p>
+                    <p class="card-translation">dynamic array</p>
+                    <p class="card-chinese">动态数组</p>
+                </div>
+                <div class="visualization">
+                    <div class="array-viz">
+                        <div class="array-cell filled">A</div>
+                        <div class="array-cell filled">B</div>
+                        <div class="array-cell filled">C</div>
+                        <div class="array-cell"></div>
+                        <div class="array-cell"></div>
+                        <div style="font-size: 0.8rem; margin-left: 10px; color: #666;">可扩容</div>
+                    </div>
+                </div>
+                <div class="description">
+                    大小可变的数组结构，当容量不足时自动扩容，支持动态增删元素。
+                </div>
+            </div>
+
+            <!-- 多维数组 -->
+            <div class="card basic">
+                <div class="card-header">
+                    <div class="sub-card-badge">基础</div>
+                    <h3 class="card-title">Multi-dimensional Array</h3>
+                    <p class="card-pronunciation">/ˌmʌltiˌdaɪˈmenʃənl əˈreɪ/</p>
+                    <p class="card-translation">multidimensional array</p>
+                    <p class="card-chinese">多维数组</p>
+                </div>
+                <div class="visualization">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px;">
+                        <div class="array-cell filled">1</div>
+                        <div class="array-cell filled">2</div>
+                        <div class="array-cell filled">3</div>
+                        <div class="array-cell filled">4</div>
+                        <div class="array-cell filled">5</div>
+                        <div class="array-cell filled">6</div>
+                        <div class="array-cell filled">7</div>
+                        <div class="array-cell filled">8</div>
+                        <div class="array-cell filled">9</div>
+                    </div>
+                    <div style="font-size: 0.8rem; margin-top: 10px; color: #666;">3×3 矩阵</div>
+                </div>
+                <div class="description">
+                    数组的数组，如二维矩阵，用于表示表格、图像等多维数据。
+                </div>
+            </div>
+
+            <!-- 位图 -->
+            <div class="card basic">
+                <div class="card-header">
+                    <div class="sub-card-badge">优化</div>
+                    <h3 class="card-title">Bitmap</h3>
+                    <p class="card-pronunciation">/ˈbɪtmæp/</p>
+                    <p class="card-translation">bitmap</p>
+                    <p class="card-chinese">位图</p>
+                </div>
+                <div class="visualization">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="font-family: monospace; font-size: 1.2rem;">10110100</div>
+                        <div style="font-size: 0.8rem; color: #666;">→ 布尔数组</div>
+                    </div>
+                </div>
+                <div class="description">
+                    用位(bit)表示布尔值的紧凑数组，极大节省空间，常用于集合操作。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. 链表 (Linked List) -->
+    <div class="category-section">
+        <div class="category-header">
+            <div class="difficulty-badge">基础 - Level 2</div>
+            <h2 class="category-title">2. 链表 Linked List</h2>
+            <p class="category-description">通过指针连接的动态数据结构，支持高效插入删除</p>
+        </div>
+        <div class="cards-grid">
+            <!-- 节点 -->
+            <div class="card linear">
+                <div class="card-header">
+                    <div class="sub-card-badge">概念</div>
+                    <h3 class="card-title">Node</h3>
+                    <p class="card-pronunciation">/noʊd/</p>
+                    <p class="card-translation">node</p>
+                    <p class="card-chinese">节点</p>
+                </div>
+                <div class="visualization">
+                    <div class="list-node">
+                        <div class="list-data">Data</div>
+                        <div class="list-pointer">Next</div>
+                    </div>
+                </div>
+                <div class="description">
+                    链表的基本单元，包含数据域存储数据，指针域指向下一个节点。
+                </div>
+            </div>
+
+            <!-- 单向链表 -->
+            <div class="card linear">
+                <div class="card-header">
+                    <div class="sub-card-badge">基础</div>
+                    <h3 class="card-title">Singly Linked List</h3>
+                    <p class="card-pronunciation">/ˈsɪŋɡli lɪŋkt lɪst/</p>
+                    <p class="card-translation">singly linked list</p>
+                    <p class="card-chinese">单向链表</p>
+                </div>
+                <div class="visualization">
+                    <div class="linked-list-viz">
+                        <div class="list-node">
+                            <div class="list-data">A</div>
+                            <div class="list-pointer">→</div>
+                        </div>
+                        <div class="list-node">
+                            <div class="list-data">B</div>
+                            <div class="list-pointer">→</div>
+                        </div>
+                        <div class="list-node">
+                            <div class="list-data">C</div>
+                            <div class="list-pointer">∅</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="description">
+                    每个节点只有一个指针指向下一个节点，只能单向遍历。
+                </div>
+            </div>
+
+            <!-- 双向链表 -->
+            <div class="card linear">
+                <div class="card-header">
+                    <div class="sub-card-badge">进阶</div>
+                    <h3 class="card-title">Doubly Linked List</h3>
+                    <p class="card-pronunciation">/ˈdʌbli lɪŋkt lɪst/</p>
+                    <p class="card-translation">doubly linked list</p>
+                    <p class="card-chinese">双向链表</p>
+                </div>
+                <div class="visualization">
+                    <div class="linked-list-viz">
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <div style="border: 2px solid var(--accent-color); border-radius: 8px; display: flex;">
+                                <div style="padding: 8px; color: var(--accent-color);">←</div>
+                                <div class="list-data" style="padding: 8px;">A</div>
+                                <div style="padding: 8px; color: var(--accent-color);">→</div>
+                            </div>
+                            <div style="border: 2px solid var(--accent-color); border-radius: 8px; display: flex;">
+                                <div style="padding: 8px; color: var(--accent-color);">←</div>
+                                <div class="list-data" style="padding: 8px;">B</div>
+                                <div style="padding: 8px; color: var(--accent-color);">→</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="description">
+                    每个节点有前后两个指针，支持双向遍历，插入删除更灵活。
+                </div>
+            </div>
+
+            <!-- 循环链表 -->
+            <div class="card linear">
+                <div class="card-header">
+                    <div class="sub-card-badge">变种</div>
+                    <h3 class="card-title">Circular Linked List</h3>
+                    <p class="card-pronunciation">/ˈsɜːrkjələr lɪŋkt lɪst/</p>
+                    <p class="card-translation">circular linked list</p>
+                    <p class="card-chinese">循环链表</p>
+                </div>
+                <div class="visualization">
+                    <div style="position: relative; width: 120px; height: 120px;">
+                        <div class="node-circle" style="position: absolute; top: 0; left: 45px;">A</div>
+                        <div class="node-circle" style="position: absolute; top: 45px; right: 0;">B</div>
+                        <div class="node-circle" style="position: absolute; bottom: 0; left: 45px;">C</div>
+                        <div class="node-circle" style="position: absolute; top: 45px; left: 0;">D</div>
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--accent-color); font-size: 1.5rem;">↻</div>
+                    </div>
+                </div>
+                <div class="description">
+                    尾节点指向头节点形成环状结构，适合需要循环访问的场景。
+                </div>
+            </div>
+
+            <!-- 哨兵节点 -->
+            <div class="card linear">
+                <div class="card-header">
+                    <div class="sub-card-badge">优化</div>
+                    <h3 class="card-title">Sentinel Node</h3>
+                    <p class="card-pronunciation">/ˈsentɪnəl noʊd/</p>
+                    <p class="card-translation">sentinel node</p>
+                    <p class="card-chinese">哨兵节点</p>
+                </div>
+                <div class="visualization">
+                    <div class="linked-list-viz">
+                        <div class="list-node" style="border-color: #ccc;">
+                            <div style="background: #ccc; color: white; padding: 12px;">∅</div>
+                            <div style="padding: 12px 10px; color: #ccc;">→</div>
+                        </div>
+                        <div class="list-node">
+                            <div class="list-data">A</div>
+                            <div class="list-pointer">→</div>
+                        </div>
+                        <div class="list-node">
+                            <div class="list-data">B</div>
+                            <div class="list-pointer">∅</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="description">
+                    不存储实际数据的特殊节点，简化边界条件处理，减少代码复杂度。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. 栈 (Stack) -->
+    <div class="category-section">
+        <div class="category-header">
+            <div class="difficulty-badge">基础 - Level 2</div>
+            <h2 class="category-title">3. 栈 Stack</h2>
+            <p class="category-description">后进先出(LIFO)的线性数据结构</p>
+        </div>
+        <div class="cards-grid">
+            <!-- LIFO -->
+            <div class="card linear">
+                <div class="card-header">
+                    <div class="sub-card-badge">原理</div>
+                    <h3 class="card-title">LIFO</h3>
+                    <p class="card-pronunciation">/ˈlaɪfoʊ/</p>
+                    <p class="card-translation">Last In, First Out</p>
+                    <p class="card-chinese">后进先出</p>
+                </div>
+                <div class="visualization">
+                    <div class="stack-viz">
+                        <div class="stack-item">C ← 最后进入</div>
+                        <div class="stack-item">B</div>
+                        <div class="stack-item">A ← 最先进入</div>
+                        <div style="margin-top: 10px; color: var(--accent-color); font-weight: bold;">↑ 出栈方向</div>
+                    </div>
+                </div>
+                <div class="description">
+                    栈的核心特性，最后放入的元素最先被取出，就像叠盘子一样。
+                </div>
+            </div>
+
+            <!-- 栈顶 -->
+            <div class="card linear">
+                <div class="card-header">
+                    <div class="sub-card-badge">概念</div>
+                    <h3 class="card-title">Top</h3>
+                    <p class="card-pronunciation">/tɑːp/</p>
+                    <p class="card-translation">top</p>
+                    <p class="card-chinese">栈顶</p>
+                </div>
+                <div class="visualization">
+                    <div class="stack-viz">
+                        <div style="color: var(--accent-color); font-weight: bold; margin-bottom: 5px;">TOP ↓</div>
+                        <div class="stack-item">Push/Pop 操作点</div>
+                        <div class="stack-item">B</div>
+                        <div class="stack-item">A</div>
+                    </div>
+                </div>
+                <div class="description">
+                    栈中进行插入(Push)和删除(Pop)操作的一端，是栈的活跃区域。
+                </div>
+            </div>
+
+            <!-- 栈底 -->
+            <div class="card linear">
+                <div class="card-header">
+                    <div class="sub-card-badge">概念</div>
+                    <h3 class="card-title">Bottom</h3>
+                    <p class="card-pronunciation">/ˈbɑːtəm/</p>
+                    <p class="card-translation">bottom</p>
+                    <p class="card-chinese">栈底</p>
+                </div>
+                <div class="visualization">
+                    <div class="stack-viz">
+                        <div class="stack-item">C</div>
+                        <div class="stack-item">B</div>
+                        <div class="stack-item">A ← 第一个元素</div>
+                        <div style="color: var(--accent-color); font-weight: bold; margin-top: 5px;">BOTTOM ↑</div>
+                    </div>
+                </div>
+                <div class="description">
+                    栈的固定一端，存放最先入栈的元素，通常不进行操作。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. 队列 (Queue) -->
+    <div class="category-section">
+        <div class="category-header">
+            <div class="difficulty-badge">基础 - Level 2</div>
+            <h2 class="category-title">4. 队列 Queue</h2>
+            <p class="category-description">先进先出(FIFO)的线性数据结构</p>
+        </div>
+        <div class="cards-grid">
+            <!-- FIFO -->
+            <div class="card linear">
+                <div class="card-header">
+                    <div class="sub-card-badge">原理</div>
+                    <h3 class="card-title">FIFO</h3>
+                    <p class="card-pronunciation">/ˈfaɪfoʊ/</p>
+                    <p class="card-translation">First In, First Out</p>
+                    <p class="card-chinese">先进先出</p>
+                </div>
+                <div class="visualization">
+                    <div class="queue-viz">
+                        <div style="font-size: 0.8rem; color: #666;">出队 ←</div>
+                        <div class="queue-item">A</div>
+                        <div class="queue-item">B</div>
+                        <div class="queue-item">C</div>
+                    </div>
+                </div>
+                <div class="description">
+                    队列中进行删除(Dequeue)操作的一端，元素从这里离开队列。
+                </div>
+            </div>
+
+            <!-- 队尾 -->
+            <div class="card linear">
+                <div class="card-header">
+                    <div class="sub-card-badge">概念</div>
+                    <h3 class="card-title">Rear</h3>
+                    <p class="card-pronunciation">/rɪr/</p>
+                    <p class="card-translation">rear</p>
+                    <p class="card-chinese">队尾</p>
+                </div>
+                <div class="visualization">
+                    <div class="queue-viz">
+                        <div class="queue-item">A</div>
+                        <div class="queue-item">B</div>
+                        <div class="queue-item">入队点</div>
+                        <div style="color: var(--accent-color); font-weight: bold;">REAR</div>
+                    </div>
+                </div>
+                <div class="description">
+                    队列中进行插入(Enqueue)操作的一端，新元素从这里进入队列。
+                </div>
+            </div>
+
+            <!-- 双端队列 -->
+            <div class="card linear">
+                <div class="card-header">
+                    <div class="sub-card-badge">进阶</div>
+                    <h3 class="card-title">Deque</h3>
+                    <p class="card-pronunciation">/dek/</p>
+                    <p class="card-translation">double-ended queue</p>
+                    <p class="card-chinese">双端队列</p>
+                </div>
+                <div class="visualization">
+                    <div class="queue-viz">
+                        <div class="arrow">↔</div>
+                        <div class="queue-item">A</div>
+                        <div class="queue-item">B</div>
+                        <div class="queue-item">C</div>
+                        <div class="arrow">↔</div>
+                    </div>
+                    <div style="font-size: 0.8rem; color: #666; margin-top: 10px;">两端都可进出</div>
+                </div>
+                <div class="description">
+                    两端都支持插入和删除操作的队列，结合了栈和队列的特性。
+                </div>
+            </div>
+
+            <!-- 循环队列 -->
+            <div class="card linear">
+                <div class="card-header">
+                    <div class="sub-card-badge">优化</div>
+                    <h3 class="card-title">Circular Queue</h3>
+                    <p class="card-pronunciation">/ˈsɜːrkjələr kjuː/</p>
+                    <p class="card-translation">circular queue</p>
+                    <p class="card-chinese">循环队列</p>
+                </div>
+                <div class="visualization">
+                    <div style="position: relative; width: 120px; height: 120px;">
+                        <div class="array-cell filled" style="position: absolute; top: 0; left: 45px; width: 30px; height: 30px; line-height: 26px; font-size: 0.9rem;">A</div>
+                        <div class="array-cell filled" style="position: absolute; top: 22px; right: 15px; width: 30px; height: 30px; line-height: 26px; font-size: 0.9rem;">B</div>
+                        <div class="array-cell filled" style="position: absolute; bottom: 0; left: 45px; width: 30px; height: 30px; line-height: 26px; font-size: 0.9rem;">C</div>
+                        <div class="array-cell" style="position: absolute; top: 22px; left: 15px; width: 30px; height: 30px; line-height: 26px; font-size: 0.9rem;"></div>
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--accent-color); font-size: 1.2rem;">↻</div>
+                    </div>
+                </div>
+                <div class="description">
+                    使用数组实现的环形队列，有效利用空间，避免假溢出问题。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. 哈希表 (Hash Table) -->
+    <div class="category-section">
+        <div class="category-header">
+            <div class="difficulty-badge">中级 - Level 3</div>
+            <h2 class="category-title">5. 哈希表 Hash Table</h2>
+            <p class="category-description">基于哈希函数的快速查找数据结构</p>
+        </div>
+        <div class="cards-grid">
+            <!-- 键值对 -->
+            <div class="card mapping">
+                <div class="card-header">
+                    <div class="sub-card-badge">概念</div>
+                    <h3 class="card-title">Key-Value Pair</h3>
+                    <p class="card-pronunciation">/kiː ˈvæljuː per/</p>
+                    <p class="card-translation">key-value pair</p>
+                    <p class="card-chinese">键值对</p>
+                </div>
+                <div class="visualization">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="queue-item" style="background: #4a5568;">"name"</div>
+                        <div class="arrow">→</div>
+                        <div class="queue-item">"Alice"</div>
+                    </div>
+                    <div style="font-size: 0.8rem; color: #666; margin-top: 10px;">Key → Value</div>
+                </div>
+                <div class="description">
+                    哈希表的基本存储单元，键用于查找，值存储实际数据。
+                </div>
+            </div>
+
+            <!-- 哈希函数 -->
+            <div class="card mapping">
+                <div class="card-header">
+                    <div class="sub-card-badge">核心</div>
+                    <h3 class="card-title">Hash Function</h3>
+                    <p class="card-pronunciation">/hæʃ ˈfʌŋkʃən/</p>
+                    <p class="card-translation">hash function</p>
+                    <p class="card-chinese">哈希函数</p>
+                </div>
+                <div class="visualization">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="queue-item" style="background: #4a5568;">"key"</div>
+                        <div class="arrow">→</div>
+                        <div style="border: 2px dashed var(--accent-color); padding: 8px; border-radius: 6px; font-size: 0.9rem;">hash()</div>
+                        <div class="arrow">→</div>
+                        <div class="queue-item">3</div>
+                    </div>
+                </div>
+                <div class="description">
+                    将任意长度的键映射为固定长度索引的函数，是哈希表的核心。
+                </div>
+            </div>
+
+            <!-- 哈希冲突 -->
+            <div class="card mapping">
+                <div class="card-header">
+                    <div class="sub-card-badge">问题</div>
+                    <h3 class="card-title">Hash Collision</h3>
+                    <p class="card-pronunciation">/hæʃ kəˈlɪʒən/</p>
+                    <p class="card-translation">hash collision</p>
+                    <p class="card-chinese">哈希冲突</p>
+                </div>
+                <div class="visualization">
+                    <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="queue-item" style="background: #4a5568; font-size: 0.8rem;">"key1"</div>
+                            <div class="arrow">→</div>
+                            <div class="queue-item">2</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="queue-item" style="background: #4a5568; font-size: 0.8rem;">"key2"</div>
+                            <div class="arrow">→</div>
+                            <div class="queue-item">2</div>
+                        </div>
+                        <div style="color: #e53e3e; font-weight: bold; font-size: 0.9rem;">冲突!</div>
+                    </div>
+                </div>
+                <div class="description">
+                    不同的键通过哈希函数得到相同的索引值，需要特殊方法解决。
+                </div>
+            </div>
+
+            <!-- 链地址法 -->
+            <div class="card mapping">
+                <div class="card-header">
+                    <div class="sub-card-badge">解决方案</div>
+                    <h3 class="card-title">Separate Chaining</h3>
+                    <p class="card-pronunciation">/ˈsepərət ˈtʃeɪnɪŋ/</p>
+                    <p class="card-translation">separate chaining</p>
+                    <p class="card-chinese">链地址法</p>
+                </div>
+                <div class="visualization">
+                    <div class="hash-table-viz" style="grid-template-columns: repeat(3, 1fr);">
+                        <div class="hash-cell">0</div>
+                        <div class="hash-cell">1</div>
+                        <div class="hash-cell">2</div>
+                    </div>
+                    <div style="margin-top: 10px; display: flex; justify-content: center;">
+                        <div class="linked-list-viz" style="flex-direction: column; align-items: center;">
+                            <div style="font-size: 0.8rem; color: #666;">索引2的链表:</div>
+                            <div style="display: flex; gap: 5px;">
+                                <div class="list-node" style="transform: scale(0.8);">
+                                    <div class="list-data">A</div>
+                                    <div class="list-pointer">→</div>
+                                </div>
+                                <div class="list-node" style="transform: scale(0.8);">
+                                    <div class="list-data">B</div>
+                                    <div class="list-pointer">∅</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="description">
+                    在冲突位置使用链表存储所有映射到该位置的元素。
+                </div>
+            </div>
+
+            <!-- 开放地址法 -->
+            <div class="card mapping">
+                <div class="card-header">
+                    <div class="sub-card-badge">解决方案</div>
+                    <h3 class="card-title">Open Addressing</h3>
+                    <p class="card-pronunciation">/ˈoʊpən əˈdresɪŋ/</p>
+                    <p class="card-translation">open addressing</p>
+                    <p class="card-chinese">开放地址法</p>
+                </div>
+                <div class="visualization">
+                    <div class="hash-table-viz">
+                        <div class="hash-cell">0</div>
+                        <div class="hash-cell filled">A</div>
+                        <div class="hash-cell filled">B</div>
+                        <div class="hash-cell">3</div>
+                    </div>
+                    <div style="font-size: 0.8rem; color: #666; margin-top: 10px;">
+                        冲突时探测下一个空位
+                    </div>
+                </div>
+                <div class="description">
+                    发生冲突时，按某种规则在数组中寻找下一个可用空位存储元素。
+                </div>
+            </div>
+
+            <!-- 负载因子 -->
+            <div class="card mapping">
+                <div class="card-header">
+                    <div class="sub-card-badge">性能</div>
+                    <h3 class="card-title">Load Factor</h3>
+                    <p class="card-pronunciation">/loʊd ˈfæktər/</p>
+                    <p class="card-translation">load factor</p>
+                    <p class="card-chinese">负载因子</p>
+                </div>
+                <div class="visualization">
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <div style="font-size: 1.2rem; color: var(--accent-color); font-weight: bold;">
+                            α = n / m
+                        </div>
+                        <div style="font-size: 0.8rem; color: #666; text-align: center;">
+                            n: 已存储元素数量<br>
+                            m: 数组总容量
+                        </div>
+                        <div class="queue-item" style="font-size: 0.9rem;">α > 0.75 时扩容</div>
+                    </div>
+                </div>
+                <div class="description">
+                    衡量哈希表填满程度的指标，用于决定何时需要扩容重新哈希。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. 树 (Tree) -->
+    <div class="category-section">
+        <div class="category-header">
+            <div class="difficulty-badge">中高级 - Level 4</div>
+            <h2 class="category-title">6. 树 Tree</h2>
+            <p class="category-description">层次化的非线性数据结构，广泛应用于各种算法</p>
+        </div>
+        
+        <!-- 6.1 基本树概念 -->
+        <h3 style="color: white; margin: 30px 0 20px; text-align: center; font-size: 1.5rem;">6.1 基本树概念</h3>
+        <div class="cards-grid">
+            <!-- 树节点 -->
+            <div class="card tree">
+                <div class="card-header">
+                    <div class="sub-card-badge">基础</div>
+                    <h3 class="card-title">Tree Node</h3>
+                    <p class="card-pronunciation">/triː noʊd/</p>
+                    <p class="card-translation">tree node</p>
+                    <p class="card-chinese">树节点</p>
+                </div>
+                <div class="visualization">
+                    <div class="node-circle">A</div>
+                    <div style="margin: 10px 0; color: var(--accent-color);">/ | \</div>
+                    <div style="display: flex; gap: 10px; justify-content: center;">
+                        <div class="node-circle" style="transform: scale(0.8);">B</div>
+                        <div class="node-circle" style="transform: scale(0.8);">C</div>
+                        <div class="node-circle" style="transform: scale(0.8);">D</div>
+                    </div>
+                </div>
+                <div class="description">
+                    树的基本组成单位，包含数据和指向子节点的指针。
+                </div>
+            </div>
+
+            <!-- 根节点 -->
+            <div class="card tree">
+                <div class="card-header">
+                    <div class="sub-card-badge">概念</div>
+                    <h3 class="card-title">Root</h3>
+                    <p class="card-pronunciation">/ruːt/</p>
+                    <p class="card-translation">root</p>
+                    <p class="card-chinese">根节点</p>
+                </div>
+                <div class="visualization">
+                    <div class="tree-viz">
+                        <div style="color: var(--accent-color); font-weight: bold; margin-bottom: 5px;">ROOT ↓</div>
+                        <div class="node-circle">A</div>
+                        <div class="tree-level">
+                            <div class="node-circle" style="transform: scale(0.8);">B</div>
+                            <div class="node-circle" style="transform: scale(0.8);">C</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="description">
+                    树的最顶层节点，没有父节点，是整个树结构的入口点。
+                </div>
+            </div>
+
+            <!-- 父子关系 -->
+            <div class="card tree">
+                <div class="card-header">
+                    <div class="sub-card-badge">关系</div>
+                    <h3 class="card-title">Parent-Child</h3>
+                    <p class="card-pronunciation">/ˈperənt tʃaɪld/</p>
+                    <p class="card-translation">parent-child</p>
+                    <p class="card-chinese">父子关系</p>
+                </div>
+                <div class="visualization">
+                    <div class="tree-viz">
+                        <div class="node-circle">父节点</div>
+                        <div style="color: var(--accent-color); margin: 5px 0;">↓</div>
+                        <div class="tree-level">
+                            <div class="node-circle" style="transform: scale(0.8);">子1</div>
+                            <div class="node-circle" style="transform: scale(0.8);">子2</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="description">
+                    直接连接的上下层节点关系，父节点指向子节点。
+                </div>
+            </div>
+
+            <!-- 兄弟节点 -->
+            <div class="card tree">
+                <div class="card-header">
+                    <div class="sub-card-badge">关系</div>
+                    <h3 class="card-title">Siblings</h3>
+                    <p class="card-pronunciation">/ˈsɪblɪŋz/</p>
+                    <p class="card-translation">siblings</p>
+                    <p class="card-chinese">兄弟节点</p>
+                </div>
+                <div class="visualization">
+                    <div class="tree-viz">
+                        <div class="node-circle" style="transform: scale(0.8);">Parent</div>
+                        <div style="color: var(--accent-color); margin: 5px 0;">/ | \</div>
+                        <div class="tree-level">
+                            <div class="node-circle" style="background: #e53e3e;">A</div>
+                            <div class="node-circle" style="background: #e53e3e;">B</div>
+                            <div class="node-circle" style="background: #e53e3e;">C</div>
+                        </div>
+                        <div style="font-size: 0.8rem; color: #666; margin-top: 5px;">兄弟节点</div>
+                    </div>
+                </div>
+                <div class="description">
+                    拥有相同父节点的节点互为兄弟节点，处于同一层级。
+                </div>
+            </div>
+
+            <!-- 叶子节点 -->
+            <div class="card tree">
+                <div class="card-header">
+                    <div class="sub-card-badge">概念</div>
+                    <h3 class="card-title">Leaf</h3>
+                    <p class="card-pronunciation">/liːf/</p>
+                    <p class="card-translation">leaf</p>
+                    <p class="card-chinese">叶子节点</p>
+                </div>
+                <div class="visualization">
+                    <div class="tree-viz">
+                        <div class="node-circle" style="transform: scale(0.8);">A</div>
+                        <div class="tree-level">
+                            <div class="node-circle" style="transform: scale(0.8);">B</div>
+                            <div class="node-circle" style="transform: scale(0.8);">C</div>
+                        </div>
+                        <div class="tree-level">
+                            <div class="node-circle" style="background: #48bb78;">叶子</div>
+                            <div class="node-circle" style="background: #48bb78;">叶子</div>
+                            <div class="node-circle" style="background: #48bb78;">叶子</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="description">
+                    没有子节点的节点，树的终端节点，通常存储实际数据。
+                </div>
+            </div>
+
+            <!-- 深度 -->
+            <div class="card tree">
+                <div class="card-header">
+                    <div class="sub-card-badge">度量</div>
+                    <h3 class="card-title">Depth</h3>
+                    <p class="card-pronunciation">/depθ/</p>
+                    <p class="card-translation">depth</p>
+                    <p class="card-chinese">深度</p>
+                </div>
+                <div class="visualization">
+                    <div class="tree-viz">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="font-size: 0.8rem; color: #666;">深度0</div>
+                            <div class="node-circle">A</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="font-size: 0.8rem; color: #666;">深度1</div>
+                            <div class="node-circle" style="transform: scale(0.8);">B</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="font-size: 0.8rem; color: #666;">深度2</div>
+                            <div class="node-circle" style="transform: scale(0.8);">C</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="description">
+                    节点到根节点的距离，根节点深度为0。
+                </div>
+            </div>
+
+            <!-- 高度 -->
+            <div class="card tree">
+                <div class="card-header">
+                    <div class="sub-card-badge">度量</div>
+                    <h3 class="card-title">Height</h3>
+                    <p class="card-pronunciation">/haɪt/</p>
+                    <p class="card-translation">height</p>
+                    <p class="card-chinese">高度</p>
+                </div>
+                <div class="visualization">
+                    <div class="tree-viz">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div class="node-circle">A</div>
+                            <div style="font-size: 0.8rem; color: #666;">高度2</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div class="node-circle" style="transform: scale(0.8);">B</div>
+                            <div style="font-size: 0.8rem; color: #666;">高度1</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div class="node-circle" style="transform: scale(0.8);">C</div>
+                            <div style="font-size: 0.8rem; color: #666;">高度0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="description">
+                    节点到其最远叶子节点的距离，叶子节点高度为0。
+                </div>
+            </div>
+
+            <!-- 子树 -->
+            <div class="card tree">
+                <div class="card-header">
+                    <div class="sub-card-badge">概念</div>
+                    <h3 class="card-title">Subtree</h3>
+                    <p class="card-pronunciation">/ˈsʌbtriː/</p>
+                    <p class="card-translation">subtree</p>
+                    <p class="card-chinese">子树</p>
+                </div>
+                <div class="visualization">
+                    <div class="tree-viz">
+                        <div class="node-circle" style="transform: scale(0.8);">A</div>
+                        <div class="tree-level">
+                            <div style="border: 2px dashed var(--accent-color); padding: 10px; border-radius: 8px;">
+                                <div class="node-circle" style="transform: scale(0.7);">B</div>
+                                <div style="display: flex; gap: 5px; justify-content: center; margin-top: 5px;">
+                                    <div class="node-circle" style="transform: scale(0.6);">D</div>
+                                    <div class="node-circle" style="transform: scale(0.6);">E</div>
+                                </div>
+                                <div style="font-size: 0.7rem; color: #666;">子树</div>
+                            </div>
+                            <div class="node-circle" style="transform: scale(0.7);">C</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="description">
+                    以某个节点为根的完整树结构，保持原有的父子关系。
+                </div>
+            </div>
+        </div>
+
+        <!-- 6.2 二叉树 -->
+        <h3 style="color: white; margin: 50px 0 20px; text-align: center; font-size: 1.5rem;">6.2 二叉树 Binary Tree</h3>
+        <div class="cards-grid">
+            <!-- 满二叉树 -->
+            <div class="card tree">
+                <div class="card-header">
+                    <div class="sub-card-badge">类型</div>
+                    <h3 class="card-title">Full Binary Tree</h3>
+                    <p class="card-pronunciation">/fʊl ˈbaɪnəri triː/</p>
+                    <p class="card-translation">full binary tree</p>
+                    <p class="card-chinese">满二叉树</p>
+                </div>
+                <div class="visualization">
+                    <div class="tree-viz">
+                        <div class="node-circle">A</div>
+                        <div class="tree-level">
+                            <div class="node-circle" style="transform: scale(0.8);">B</div>
+                            <div class="node-circle" style="transform: scale(0.8);">C</div>
+                        </div>
+                        <div class="tree-level">
+                            <div class="node-circle" style="transform: scale(0.7);">D</div>
+                            <div class="node-circle" style="transform: scale(0.7);">E</div>
+                            <div class="node-circle" style="transform: scale(0.7);">F</div>
+                            <div class="node-circle" style="transform: scale(0.7);">G</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="description">
+                    所有内部节点都恰好有两个子节点的二叉树，叶子节点都在同一层。
+                </div>
+            </div>
+
+            <!-- 完全二叉树 -->
+            <div class="card tree">
+                <div class="card-header">
+                    <div class="sub-card-badge">类型</div>
+                    <h3 class="card-title">Complete Binary Tree</h3>
+                    <p class="card-pronunciation">/kəmˈpliːt ˈbaɪnəri triː/</p>
+                    <p class="card-translation">complete binary tree</p>
+                    <p class="card-chinese">完全二叉树</p>
+                </div>
+                <div class="visualization">
+                    <div class="tree-viz">
+                        <div class="node-circle">A</div>
+                        <div class="tree-level">
+                            <div class="node-circle" style="transform: scale(0.8);">B</div>
+                            <div class="node-circle" style="transform: scale(0.8);">C</div>
+                        </div>
+                        <div class="tree-level">
+                            <div class="node-circle" style="transform: scale(0.7);">D</div>
+                            <div class="node-circle" style="transform: scale(0.7);">E</div>
+                            <div class="node-circle" style="transform: scale(0.7);">F</div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.8rem; color: #666; margin-top: 5px;">从左到右填充</div>
+                </div>
+                <div class="description">
+                    除最后一层外都填满，最后一层从左到右连续填充的二叉树。
+                </div>
+            </div>
+
+            <!-- 二叉搜索树 -->
+            <div class="card tree">
+                <div class="card-header">
+                    <div class="sub-card-badge">搜索</div>
+                    <h3 class="card-title">Binary Search Tree</h3>
+                    <p class="card-pronunciation">/ˈbaɪnəri sɜːrtʃ triː/</p>
+                    <p class="card-translation">BST</p>
+                    <p</div>
+                        <div style="font-size: 0.8rem; color: #666;">← 入队</div>
+                    </div>
+                </div>
+                <div class="description">
+                    队列的核心特性，最先进入的元素最先出队，如排队买票。
+                </div>
+            </div>

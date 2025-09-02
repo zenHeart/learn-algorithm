@@ -11,6 +11,13 @@ class TrieNode implements ITrieNode {
 class Trie {
   static TrieNode = TrieNode
   root: TrieNode = new TrieNode()
+
+  static build(dics: string[]): TrieNode {
+    const trie = new Trie()
+    dics.forEach(trie.insert.bind(trie))
+    return trie.root
+  }
+
   insert(str: string) {
     let curPos = this.root
     for (let i = 0; i < str.length; i++) {

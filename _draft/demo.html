@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>数据结构速查表 (Data Structures Cheatsheet)</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Roboto:ital,wght@0,400;0,700;1,400&display=swap');
+
+      body {
+        font-family: 'Roboto', 'Noto Sans SC', sans-serif;
+        background-color: #f0f2f5;
+        padding: 20px;
+        margin: 0;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 30px;
+      }
+
+      .cheatsheet-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+        gap: 20px;
+      }
+
+      .card {
+        background-color: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start; /* Changed */
+        min-height: 350px; /* Adjusted min-height */
+      }
+
+      .card-content {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .card h2 {
+        margin: 0 0 5px 0;
+        font-size: 24px;
+        color: #111;
+      }
+
+      .card .pronunciation {
+        font-style: italic;
+        color: #555;
+        margin: 0;
+      }
+
+      .card .syllables {
+        color: #777;
+        margin: 0 0 10px 0;
+      }
+
+      .card .definition {
+        color: #333;
+        font-size: 16px;
+        margin: 0 0 15px 0;
+      }
+
+      .card .diagram {
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 14px;
+        line-height: 1.5;
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+      }
+
+      /* Color Palette */
+      .card.c-pink {
+        background-color: #fff0f5;
+      }
+      .card.c-blue {
+        background-color: #e6f7ff;
+      }
+      .card.c-green {
+        background-color: #f6ffed;
+      }
+      .card.c-orange {
+        background-color: #fff7e6;
+      }
+      .card.c-purple {
+        background-color: #f9f0ff;
+      }
+      .card.c-cyan {
+        background-color: #e6fffb;
+      }
+      .card.c-red {
+        background-color: #fff1f0;
+      }
+      .card.c-yellow {
+        background-color: #feffe6;
+      }
+
+      /* --- Specific Diagram Styles --- */
+      .diagram .node {
+        background-color: #fff;
+        border: 2px solid #555;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+      .diagram .box {
+        background-color: #fff;
+        border: 2px solid #555;
+        min-width: 30px;
+        height: 30px;
+        padding: 0 5px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 2px;
+        position: relative;
+      }
+      .diagram .arrow {
+        font-size: 20px;
+        color: #555;
+        margin: 0 5px;
+      }
+
+      /* --- NEW: Visual Hash Table --- */
+      .hash-table-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        font-size: 12px;
+      }
+      .hash-keys {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .hash-key {
+        font-weight: bold;
+      }
+      .hash-arrows {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        color: #888;
+      }
+      .hash-buckets {
+        border: 2px solid #aaa;
+        border-radius: 4px;
+      }
+      .hash-bucket {
+        padding: 5px 8px;
+        border-bottom: 1px dashed #ccc;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .hash-bucket:last-child {
+        border-bottom: none;
+      }
+      .kv-pair {
+        background: #fff;
+        border: 1px solid #888;
+        border-radius: 4px;
+        padding: 1px 3px;
+        font-size: 10px;
+        white-space: nowrap;
+      }
+
+      /* --- REFACTORED: Symmetrical & Centered Tree Diagram --- */
+      .tree-container {
+        width: 100%;
+      }
+      .tree {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 12px;
+      }
+      .tree .node {
+        margin: 0;
+      }
+      .tree-children {
+        display: flex;
+        justify-content: center;
+        position: relative;
+      }
+      /* Vertical line from parent */
+      .tree-children::before {
+        content: '';
+        position: absolute;
+        top: -15px;
+        height: 15px;
+        width: 2px;
+        background-color: #555;
+      }
+      .tree-node-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 10px; /* space between siblings */
+        position: relative;
+      }
+      /* Horizontal line and vertical line up to child */
+      .tree-node-wrapper::before {
+        content: '';
+        position: absolute;
+        top: -15px;
+        height: 2px;
+        width: 100%;
+        background-color: #555;
+      }
+      .tree-node-wrapper::after {
+        content: '';
+        position: absolute;
+        top: -15px;
+        height: 15px;
+        width: 2px;
+        background-color: #555;
+      }
+      /* Adjustments for horizontal line across siblings */
+      .tree-children > .tree-node-wrapper:first-child::before {
+        left: 50%;
+      }
+      .tree-children > .tree-node-wrapper:last-child::before {
+        right: 50%;
+      }
+      /* Hide unnecessary lines for a single child */
+      .tree-children > .tree-node-wrapper:only-child::before {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>数据结构核心概念速查表</h1>
+
+    <div class="cheatsheet-grid">
+      <div class="card c-green">
+        <div class="card-content">
+          <h2>Hash Table</h2>
+          <p class="pronunciation">/hæʃ ˈteɪ.bəl/</p>
+          <p class="syllables">hash ta-ble</p>
+          <p class="definition">哈希表</p>
+          <div class="diagram">
+            <div class="hash-table-container">
+              <div class="hash-keys">
+                <div class="hash-key">"age"</div>
+                <div class="hash-key">"user"</div>
+              </div>
+              <div class="hash-arrows">
+                <div>→ hash() →</div>
+                <div>→ hash() →</div>
+              </div>
+              <div class="hash-buckets">
+                <div class="hash-bucket" style="color: #ccc">[0]</div>
+                <div class="hash-bucket">
+                  [1]<span class="kv-pair">"age",25</span
+                  ><span class="arrow" style="font-size: 14px">→</span
+                  ><span class="kv-pair">"user"</span>
+                </div>
+                <div class="hash-bucket" style="color: #ccc">[2]</div>
+                <div style="text-align: center; color: #ccc">...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card c-pink">
+        <div class="card-content">
+          <h2>Binary Tree</h2>
+          <p class="pronunciation">/ˈbaɪ.nə.ri triː/</p>
+          <p class="syllables">bi-na-ry tree</p>
+          <p class="definition">二叉树</p>
+          <div class="diagram">
+            <div class="tree-container">
+              <div class="tree">
+                <div class="tree-node-wrapper">
+                  <span class="node">A</span>
+                  <div class="tree-children">
+                    <div class="tree-node-wrapper">
+                      <span class="node">B</span>
+                    </div>
+                    <div class="tree-node-wrapper">
+                      <span class="node">C</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card c-pink">
+        <div class="card-content">
+          <h2>BST</h2>
+          <p class="pronunciation">/biː es tiː/</p>
+          <p class="syllables">B S T</p>
+          <p class="definition">二叉搜索树</p>
+          <div class="diagram">
+            <div class="tree-container">
+              <div class="tree">
+                <div class="tree-node-wrapper">
+                  <span class="node">8</span>
+                  <div class="tree-children">
+                    <div class="tree-node-wrapper">
+                      <span class="node">3</span>
+                    </div>
+                    <div class="tree-node-wrapper">
+                      <span class="node">10</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card c-red">
+        <div class="card-content">
+          <h2>Heap</h2>
+          <p class="pronunciation">/hiːp/</p>
+          <p class="syllables">heap</p>
+          <p class="definition">堆 (最小堆)</p>
+          <div class="diagram">
+            <div class="tree-container">
+              <div class="tree">
+                <div class="tree-node-wrapper">
+                  <span class="node">10</span>
+                  <div class="tree-children">
+                    <div class="tree-node-wrapper">
+                      <span class="node">18</span>
+                    </div>
+                    <div class="tree-node-wrapper">
+                      <span class="node">25</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card c-green">
+        <div class="card-content">
+          <h2>Trie</h2>
+          <p class="pronunciation">/traɪ/</p>
+          <p class="syllables">trie</p>
+          <p class="definition">前缀树</p>
+          <div class="diagram">
+            <div class="tree-container">
+              <div class="tree">
+                <div class="tree-node-wrapper">
+                  <span class="node" style="border-style: dashed"></span>
+                  <div class="tree-children">
+                    <div class="tree-node-wrapper">
+                      <span class="node">c</span>
+                      <div class="tree-children">
+                        <div class="tree-node-wrapper">
+                          <span class="node" style="background-color: #d4edda"
+                            >a</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tree-node-wrapper">
+                      <span class="node" style="background-color: #d4edda"
+                        >b</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card c-purple">
+        <div class="card-content">
+          <h2>Graph</h2>
+          <p class="pronunciation">/ɡræf/</p>
+          <p class="syllables">graph</p>
+          <p class="definition">图</p>
+          <div
+            class="diagram"
+            style="position: relative; width: 120px; height: 100px"
+          >
+            <div class="node" style="position: absolute; top: 0; left: 40px">
+              A
+            </div>
+            <div class="node" style="position: absolute; top: 60px; left: 0">
+              B
+            </div>
+            <div class="node" style="position: absolute; top: 60px; left: 80px">
+              C
+            </div>
+            <svg
+              width="120"
+              height="100"
+              style="position: absolute; top: 0; left: 0; z-index: 0"
+            >
+              <line
+                x1="55"
+                y1="17"
+                x2="15"
+                y2="75"
+                stroke="#555"
+                stroke-width="2"
+              />
+              <line
+                x1="65"
+                y1="17"
+                x2="95"
+                y2="75"
+                stroke="#555"
+                stroke-width="2"
+              />
+              <line
+                x1="30"
+                y1="90"
+                x2="90"
+                y2="90"
+                stroke="#555"
+                stroke-width="2"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="card c-blue">
+        <div class="card-content">
+          <h2>Array</h2>
+          <p class="pronunciation">/əˈreɪ/</p>
+          <p class="syllables">ar-ray</p>
+          <p class="definition">数组</p>
+          <div class="diagram">
+            <div>
+              <div>
+                <span class="box">A</span><span class="box">B</span
+                ><span class="box">C</span>
+              </div>
+              <div style="font-size: 12px; margin-left: 5px">
+                <span style="display: inline-block; width: 40px">0</span>
+                <span style="display: inline-block; width: 40px">1</span>
+                <span style="display: inline-block; width: 40px">2</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card c-cyan">
+        <div class="card-content">
+          <h2>Linked List</h2>
+          <p class="pronunciation">/lɪŋkt lɪst/</p>
+          <p class="syllables">linked list</p>
+          <p class="definition">链表</p>
+          <div class="diagram">
+            <div>
+              <span class="box">A</span><span class="arrow">→</span
+              ><span class="box">B</span><span class="arrow">→</span
+              ><span class="box">C</span><span class="arrow">→</span
+              ><span>Ø</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card c-purple">
+        <div class="card-content">
+          <h2>Stack</h2>
+          <p class="pronunciation">/stæk/</p>
+          <p class="syllables">stack</p>
+          <p class="definition">栈 (LIFO)</p>
+          <div class="diagram">
+            <div>
+              <div class="stack-box">C</div>
+              <div class="stack-box">B</div>
+              <div class="stack-box" style="border-bottom: 2px solid #555">
+                A
+              </div>
+              <div>↑ Push / Pop ↓</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card c-orange">
+        <div class="card-content">
+          <h2>Queue</h2>
+          <p class="pronunciation">/kjuː/</p>
+          <p class="syllables">queue</p>
+          <p class="definition">队列 (FIFO)</p>
+          <div class="diagram">
+            <div>
+              <span>← Dequeue</span>
+              <div>
+                <span class="box">A</span><span class="box">B</span
+                ><span class="box">C</span>
+              </div>
+              <span>Enqueue →</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card c-yellow">
+        <div class="card-content">
+          <h2>Deque</h2>
+          <p class="pronunciation">/ˈdek.juː/</p>
+          <p class="syllables">de-que</p>
+          <p class="definition">双端队列</p>
+          <div class="diagram">
+            <div>
+              <span>↔</span>
+              <div>
+                <span class="box">A</span><span class="box">B</span
+                ><span class="box">C</span>
+              </div>
+              <span>↔</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card c-red">
+        <div class="card-content">
+          <h2>Sentinel</h2>
+          <p class="pronunciation">/ˈsen.tɪ.nəl/</p>
+          <p class="syllables">sen-ti-nel</p>
+          <p class="definition">哨兵节点</p>
+          <div class="diagram">
+            <div>
+              <span class="box" style="border-style: dashed">S</span
+              ><span class="arrow">→</span><span class="box">A</span
+              ><span class="arrow">→</span><span class="box">B</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
