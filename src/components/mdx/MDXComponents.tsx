@@ -1,4 +1,6 @@
 import React from 'react'
+import { Playground } from './playground/Playground'
+import { parsePlaygroundConfig } from './playground/parser'
 
 // 定义组件 props 类型
 interface CodeBlockProps {
@@ -277,7 +279,22 @@ export const mdxComponents = {
   h6: (props: ComponentProps) => <Heading level={6} {...props} />,
 
   // 代码相关
-  pre: (props: ComponentProps) => <CodeBlock {...props} />,
+  pre: (props: ComponentProps & { children?: any }) => {
+    // 尝试拦截 language-playground 代码块
+    const child = Array.isArray(props.children)
+      ? props.children[0]
+      : props.children
+    if (
+      React.isValidElement(child) &&
+      typeof child.props?.className === 'string' &&
+      child.props.className.includes('language-playground')
+    ) {
+      const raw = extractTextFromNode(child.props.children)
+      const cfg = parsePlaygroundConfig(raw || '')
+      return <Playground {...cfg} />
+    }
+    return <CodeBlock {...props} />
+  },
   code: (props: ComponentProps & { className?: string }) => {
     // 如果是在 pre 标签内，返回原始 code
     if (props.className) {

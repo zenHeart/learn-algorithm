@@ -302,15 +302,18 @@
   - [ ] 添加动画控制 (播放、暂停、步进)
   - **验收**: 3种基础数据结构能正确可视化并支持交互
 
-### 🔧 10. @playground 注释处理
+### 🔧 10. Playground fenced 语法处理
 
 #### 10.1 MDX 处理器扩展
 
-- [ ] **注释解析器** (3天)
-  - [ ] 实现 @playground 注释识别和解析
-  - [ ] 实现文件查找逻辑 (按优先级查找)
-  - [ ] 实现组件动态生成和注入
-  - **验收**: @playground 注释能正确解析并显示交互组件
+- [ ] **fenced 语法解析器** (3天)
+  - [ ] 识别并解析 fenced code block：```playground
+  - [ ] 支持 schema：file | dir | files | entry | template | options
+  - [ ] 路径解析基于当前 Markdown 文件目录，禁止绝对路径与远程 URL
+  - [ ] 目录扫描递归并忽略常见目录：node_modules、dist、build、.git 等
+  - [ ] 多文件 files 对象语法：支持 hidden、active 配置
+  - [ ] 生成组件 props 并在文档位置动态注入 Playground 组件
+  - **验收**: 能根据 fenced 配置正确渲染组件，并按 options 行为工作
 
 #### 10.2 多模板支持
 
@@ -318,14 +321,15 @@
   - [ ] 实现 demo 模式 (只读展示)
   - [ ] 实现 exercise 模式 (可编辑练习)
   - [ ] 实现 test 模式 (测试用例验证)
-  - **验收**: 3种模板模式都能正常工作
+  - [ ] 支持 template 推断与显式选择（基于文件后缀/默认规则）
+  - **验收**: 3种模板模式正常工作，template 推断与覆盖生效
 
 **P1 阶段验收标准**:
 
 - ✅ 代码编辑器功能完整，体验良好
 - ✅ 能安全执行代码并显示结果
 - ✅ 基础数据结构可视化正常工作
-- ✅ @playground 注释能正确处理和显示
+- ✅ playground fenced 语法能正确处理和显示
 
 ---
 
