@@ -57,6 +57,8 @@ export function Playground(props: PlaygroundProps) {
   const showHeader = false
   const debounceRef = useRef<number | undefined>(undefined)
   const isSingleFile = openFiles.length <= 1
+  const editorHeight = options?.editorHeight ?? 400
+  const tabBarHeight = isSingleFile ? 0 : 32
 
   const loadFileContents = useCallback(async () => {
     const paths = openFiles.map(f => f.path)
@@ -181,7 +183,7 @@ export function Playground(props: PlaygroundProps) {
       {/* 编辑器（左） + 输出（右） 布局；移动端自动折行 */}
       <div className='mt-2 grid grid-cols-1 gap-0 md:grid-cols-2'>
         {/* 左侧：文件标签 + 编辑器（单文件隐藏标签） */}
-        <div className='flex min-h-[420px] flex-col'>
+        <div className='flex flex-col' style={{ height: editorHeight }}>
           {!isSingleFile && (
             <div className='flex flex-nowrap gap-0 overflow-x-auto border-b border-gray-200 p-0 whitespace-nowrap dark:border-gray-700'>
               {openFiles.map(f => (
@@ -206,7 +208,7 @@ export function Playground(props: PlaygroundProps) {
               value={activePath ? (fileContents[activePath] ?? '') : ''}
               language={'javascript'}
               readOnly={options.editable === false}
-              height={options?.editorHeight ?? 300}
+              height={Math.max(100, editorHeight - tabBarHeight)}
               onChange={next => {
                 if (!activePath) return
                 // 实时写入当前激活文件内容
@@ -223,7 +225,10 @@ export function Playground(props: PlaygroundProps) {
         </div>
 
         {/* 右侧：输出区（单文件合并显示） */}
-        <div className='relative min-h-[420px] rounded-md border border-gray-200 p-2 text-sm dark:border-gray-700'>
+        <div
+          className='relative rounded-md border border-gray-200 p-2 text-sm dark:border-gray-700'
+          style={{ height: editorHeight }}
+        >
           {isSingleFile ? (
             <>
               <div className='mb-2 font-medium text-gray-800 dark:text-gray-200'>
