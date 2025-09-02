@@ -14,6 +14,7 @@ export interface PlaygroundOptions {
   runOnLoad?: boolean
   editable?: boolean
   sandbox?: boolean
+  editorHeight?: number // 新增：编辑器固定高度（px）
 }
 
 export interface PlaygroundProps {
@@ -61,10 +62,28 @@ export function Playground(props: PlaygroundProps) {
     const paths = openFiles.map(f => f.path)
     const resolved = resolveDocFiles(paths)
     const missing = paths.filter(p => !resolved.find(r => r.path === p))
-    const filled = resolved.concat(
-      missing.map(p => ({ path: p, contents: `console.log('未能加载: ${p}')` }))
-    )
-    return filled
+    // 如果仍然缺失，尝试从默认目录拼接获取
+    if (missing.length > 0) {
+      const baseDir = dir || './playground'
+      const extra = resolveDocFiles(
+        missing.map(p => {
+          // p 可能已是 './playground/xxx'，直接返回；否则拼上 baseDir
+          return p.startsWith('./') ? p : `${baseDir}/${p}`
+        })
+      )
+      const merged = [...resolved]
+      for (const e of extra) {
+        if (!merged.find(m => m.path === e.path)) merged.push(e)
+      }
+      const stillMissing = paths.filter(p => !merged.find(r => r.path === p))
+      return merged.concat(
+        stillMissing.map(p => ({
+          path: p,
+          contents: `console.log('未能加载: ${p}')`,
+        }))
+      )
+    }
+    return resolved
   }, [openFiles])
 
   const handleRun = useCallback(async () => {
@@ -96,7 +115,7 @@ export function Playground(props: PlaygroundProps) {
       setFileContents(prev => {
         const next = { ...prev }
         for (const f of filesData) {
-          if (!(f.path in next)) next[f.path] = f.contents
+          next[f.path] = f.contents
         }
         return next
       })
@@ -187,9 +206,11 @@ export function Playground(props: PlaygroundProps) {
               value={activePath ? (fileContents[activePath] ?? '') : ''}
               language={'javascript'}
               readOnly={options.editable === false}
+              height={options?.editorHeight ?? 300}
               onChange={next => {
                 if (!activePath) return
-                setFileContents(prev => ({ ...prev, [activePath]: next }))
+                // 实时写入当前激活文件内容
+                setFileContents(prev => ({ ...prev, [activePath!]: next }))
                 if (debounceRef.current) {
                   window.clearTimeout(debounceRef.current)
                 }

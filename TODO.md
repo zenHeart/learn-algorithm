@@ -309,6 +309,7 @@
 - [ ] **fenced 语法解析器** (3天)
   - [ ] 识别并解析 fenced code block：```playground
   - [ ] 支持 schema：file | dir | files | entry | template | options
+  - [ ] options.editorHeight: number（单位 px，默认 300）
   - [ ] 路径解析基于当前 Markdown 文件目录，禁止绝对路径与远程 URL
   - [ ] 目录扫描递归并忽略常见目录：node_modules、dist、build、.git 等
   - [ ] 多文件 files 对象语法：支持 hidden、active 配置

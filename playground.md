@@ -70,6 +70,7 @@ options:
   runOnLoad: true
   editable: true
   sandbox: true
+  editorHeight: 300 # 新增：编辑器固定高度（px，默认 300）
 ```
 
 - **`title`**: 可选，用于 UI 展示的标题。

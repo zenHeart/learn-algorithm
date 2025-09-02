@@ -16,10 +16,11 @@ function trimQuotes(input: string): string {
   return s
 }
 
-// 解析布尔与字符串
-function parseScalar(value: string): string | boolean {
+// 解析布尔/数字/字符串
+function parseScalar(value: string): string | boolean | number {
   const v = value.trim()
   if (/^(true|false)$/i.test(v)) return v.toLowerCase() === 'true'
+  if (/^\d+(?:\.\d+)?$/.test(v)) return Number(v)
   return trimQuotes(v)
 }
 

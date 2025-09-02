@@ -8,6 +8,7 @@ export interface CodeEditorProps {
   language?: 'javascript' | 'typescript'
   readOnly?: boolean
   onChange?: (next: string) => void
+  height?: number // 固定高度（px），用于保持切换时不跳动
 }
 
 export function CodeEditor({
@@ -15,16 +16,19 @@ export function CodeEditor({
   language = 'javascript',
   readOnly,
   onChange,
+  height = 300,
 }: CodeEditorProps) {
   const hostRef = useRef<HTMLDivElement | null>(null)
   const viewRef = useRef<EditorView | null>(null)
+  const onChangeRef = useRef<CodeEditorProps['onChange']>()
+  onChangeRef.current = onChange
 
   useEffect(() => {
     if (!hostRef.current) return
     // 让编辑器高度撑满父容器
     const fullHeightTheme = EditorView.theme({
       '&': { height: '100%' },
-      '.cm-scroller': { height: '100%' },
+      '.cm-scroller': { height: '100%', overflow: 'auto' },
     })
 
     const extensions = [oneDark, fullHeightTheme]
@@ -40,8 +44,8 @@ export function CodeEditor({
       extensions: [
         ...extensions,
         EditorView.updateListener.of(vu => {
-          if (vu.docChanged && onChange) {
-            onChange(vu.state.doc.toString())
+          if (vu.docChanged && onChangeRef.current) {
+            onChangeRef.current(vu.state.doc.toString())
           }
         }),
       ],
@@ -69,7 +73,7 @@ export function CodeEditor({
     <div
       ref={hostRef}
       className='h-full w-full rounded-none'
-      style={{ height: '100%', minHeight: 380 }}
+      style={{ height }}
     />
   )
 }

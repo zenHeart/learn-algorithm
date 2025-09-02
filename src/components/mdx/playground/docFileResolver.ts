@@ -1,6 +1,8 @@
 // 文档文件解析器：基于 Vite 的 glob 原始内容映射，按当前路由推导文档基路径
 
-const rawDocs: Record<string, () => string> = import.meta.glob('/docs/**/*', {
+// 说明：当使用 { eager: true, as: 'raw' } 时，Vite 会在构建期返回字符串内容
+// 因此这里的类型为 Record<string, string>
+const rawDocs: Record<string, any> = import.meta.glob('/docs/**/*', {
   as: 'raw',
   eager: true,
 }) as any
@@ -43,8 +45,24 @@ export function resolveDocFile(
   const cleanRel = relativePath.replace(/^\.\//, '')
   const fullPath = joinPath(baseDir, cleanRel)
   const loader = rawDocs[fullPath]
+  // 支持两种返回：字符串（eager + raw）或函数（非 eager）
+  if (typeof loader === 'string') {
+    return { path: relativePath, contents: loader }
+  }
   if (typeof loader === 'function') {
-    return { path: relativePath, contents: loader() }
+    try {
+      const res = loader()
+      // 兼容异步或同步
+      if (typeof res === 'string') {
+        return { path: relativePath, contents: res }
+      }
+      if (res && typeof res.then === 'function') {
+        // 虽然当前未使用异步，但为健壮性返回 null 由上层 fallback
+        // 或者可以在上层改造为支持 async
+      }
+    } catch (e) {
+      // 忽略错误，走 fallback
+    }
   }
   return null
 }
