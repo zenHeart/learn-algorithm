@@ -8,6 +8,7 @@ export interface PlaygroundFileItem {
   path: string
   hidden?: boolean
   active?: boolean
+  name?: string // 用于 Tab 显示的友好名称
 }
 
 export interface PlaygroundOptions {
@@ -59,6 +60,47 @@ export function Playground(props: PlaygroundProps) {
   const isSingleFile = openFiles.length <= 1
   const editorHeight = options?.editorHeight ?? 400
   const tabBarHeight = isSingleFile ? 0 : 32
+
+  // 规范路径，默认从 playground/ 目录查找
+  function normalizePlaygroundPath(p: string): string {
+    const clean = p.replace(/^\.\//, '')
+    if (clean.startsWith('playground/')) return `./${clean}`
+    return `./playground/${clean}`
+  }
+
+  // 从相对路径中提取用于 Tab 的名称
+  function getTabName(paths: string[], current: string): string {
+    // paths/current 均为 './xxx' 形式，内部可能带 'playground/' 前缀
+    const strip = (s: string) => s.replace(/^\.\//, '')
+    const removePg = (s: string) => strip(s).replace(/^playground\//, '')
+
+    const all = paths.map(removePg)
+    const cur = removePg(current)
+
+    // 若配置了 dir，则以 dir 作为根；否则求公共目录根
+    const dirRoot = (dir || '').replace(/^\.\//, '')
+    let root = ''
+    if (dirRoot) {
+      root = dirRoot.replace(/^playground\//, '')
+    } else if (all.length > 1) {
+      // 公共目录
+      const split = (s: string) => s.split('/').slice(0, -1)
+      const segsArr = all.map(split)
+      const minLen = Math.min(...segsArr.map(a => a.length))
+      const common: string[] = []
+      for (let i = 0; i < minLen; i++) {
+        const v = segsArr[0][i]
+        if (segsArr.every(a => a[i] === v)) common.push(v)
+        else break
+      }
+      root = common.join('/')
+    }
+
+    const rel = root ? cur.replace(new RegExp(`^${root}/`), '') : cur
+    // 单文件只显示文件名
+    if (all.length === 1) return rel.split('/').pop() || rel
+    return rel
+  }
 
   const loadFileContents = useCallback(async () => {
     const paths = openFiles.map(f => f.path)
@@ -114,11 +156,28 @@ export function Playground(props: PlaygroundProps) {
   useEffect(() => {
     ;(async () => {
       const filesData = await loadFileContents()
+      // 生成 Tab 名称
+      const normalizedPaths = (
+        files.length > 0
+          ? files.map(f => (typeof f === 'string' ? f : f.path))
+          : filesData.map(f => f.path)
+      ).map(normalizePlaygroundPath)
+
+      setOpenFiles(prev => {
+        const mapped = (
+          prev.length ? prev : filesData.map(f => ({ path: f.path }))
+        ).map(it => {
+          const p = normalizePlaygroundPath(it.path)
+          return { ...it, path: p, name: getTabName(normalizedPaths, p) }
+        })
+        // 初次设置 activePath
+        if (!activePath && mapped.length) setActivePath(mapped[0].path)
+        return mapped
+      })
+
       setFileContents(prev => {
         const next = { ...prev }
-        for (const f of filesData) {
-          next[f.path] = f.contents
-        }
+        for (const f of filesData) next[f.path] = f.contents
         return next
       })
     })()
@@ -197,7 +256,7 @@ export function Playground(props: PlaygroundProps) {
                   }`}
                   title={f.path}
                 >
-                  {f.path.replace(/^\.\//, '')}
+                  {f.name || f.path.replace(/^\.\//, '')}
                 </button>
               ))}
             </div>
