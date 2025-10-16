@@ -1,5 +1,0 @@
-{
-  "tasks": {
-    "test": "deno test --ext ts docs/data-structures --watch docs/data-structures --no-check"
-  }
-}
