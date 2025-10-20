@@ -3,12 +3,12 @@ module.exports = [
         input: [
             [[]]
         ],
-        expect: [[]]
+        expect: false
     },
     {
         input: [
             []
         ],
-        expect: []
+        expect: false
     }
 ];

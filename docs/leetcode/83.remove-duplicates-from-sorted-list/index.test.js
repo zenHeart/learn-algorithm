@@ -2,9 +2,9 @@ const func = require('./index');
 const { expect } = require('chai');
 const {
   createListWithArray
-} = require('../../data-structures/list/LinkedList');
+} = require('../../data-structures/02.list/LinkedList.js');
 
-describe('remove-duplicates-from-sorted-list', function() {
+describe('remove-duplicates-from-sorted-list', function () {
   let testData = {
     empty: [[], []],
     value1: [
@@ -18,7 +18,7 @@ describe('remove-duplicates-from-sorted-list', function() {
     ]
   };
   for (let unitTestName in testData) {
-    it(unitTestName, function() {
+    it(unitTestName, function () {
       let data = testData[unitTestName];
       let l = createListWithArray(data[0]);
       let expectRes = createListWithArray(data[1]);

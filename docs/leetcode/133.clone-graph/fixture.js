@@ -1,14 +1,14 @@
 module.exports = [
     {
         input: [
-            [[]]
+            [{ val: 0, neighbors: [] }]
         ],
-        expect: [[]]
+        expect: { val: 0, neighbors: [] }
     },
     {
         input: [
             []
         ],
-        expect: []
+        expect: { val: 0, neighbors: [] }
     }
 ];

@@ -3,7 +3,7 @@ module.exports = [
         input: [
             [[]]
         ],
-        expect: [[]]
+        expect: []
     },
     {
         input: [

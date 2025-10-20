@@ -28,10 +28,12 @@ var cloneGraph = function (node) {
         }
         const newCloneNode = newNode(node.val);
         cloneNeighborsGraph[nodeIndex] = newCloneNode;
-        for (let i = 0; i < node.neighbors.length; i++) {
-            const neighborNode = node.neighbors[i]
-            const newCloneNeighborNode = deepCloneNode(neighborNode)
-            newCloneNode.neighbors.push(newCloneNeighborNode)
+        if (Array.isArray(node.neighbors)) {
+            for (let i = 0; i < node.neighbors.length; i++) {
+                const neighborNode = node.neighbors[i]
+                const newCloneNeighborNode = deepCloneNode(neighborNode)
+                newCloneNode.neighbors.push(newCloneNeighborNode)
+            }
         }
         return newCloneNode
     }

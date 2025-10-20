@@ -51,6 +51,4 @@ function createListWithArray(arr) {
   return list.head || null;
 }
 
-exports.LinkedList = LinkedList;
-exports.Node = Node;
-exports.createListWithArray = createListWithArray;
+export { LinkedList, Node, createListWithArray };

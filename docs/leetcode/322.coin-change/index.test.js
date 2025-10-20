@@ -1,5 +1,5 @@
-let { expect } = require('chai');
-let coinChange = require('./index');
+import { describe, it, expect } from 'vitest';
+import coinChange from './index.js';
 
 let testData = {
   输入非法: {
@@ -28,12 +28,12 @@ let testData = {
   }
 };
 
-describe('硬币交换测试用例', function() {
+describe('硬币交换测试用例', function () {
   for (let unitTestName in testData) {
-    it(unitTestName, function() {
+    it(unitTestName, function () {
       let data = testData[unitTestName];
       let res = coinChange(data.input[0], data.input[1]);
-      expect(res).to.eq(data.expect);
+      expect(res).toBe(data.expect);
     });
   }
 });

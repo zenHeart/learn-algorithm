@@ -1,5 +1,4 @@
-import { assertEquals } from 'https://deno.land/std@0.157.0/testing/asserts.ts'
-import { describe, it } from 'https://deno.land/std@0.157.0/testing/bdd.ts'
+import { describe, it, expect } from 'vitest'
 
 type TransformFunc = (...args: unknown[]) => unknown
 type TEST_UNIT =
@@ -26,17 +25,15 @@ export function runTestSuite(testSuites: TEST_SUITE) {
           it(unitName, () => {
             const testData = testUnite[0]
             if (typeof testUnite[2] === 'function') {
-              assertEquals(
+              expect(
                 testUnite[2](
                   ...(Array.isArray(testData) ? testData : [testData])
-                ),
-                testUnite[1]
-              )
+                )
+              ).toEqual(testUnite[1])
             } else {
-              assertEquals(
-                ...(Array.isArray(testData) ? testData : [testData]),
-                testUnite[1]
-              )
+              expect(
+                ...(Array.isArray(testData) ? testData : [testData])
+              ).toEqual(testUnite[1])
             }
           })
         }

@@ -11,12 +11,10 @@
  * @return {number[]}
  */
 var findOrder = function (numCourses, prerequisites) {
-    // 创建入度表
+    if (!Array.isArray(prerequisites)) return [];
     const inDegree = new Array(numCourses).fill(0);
-    // 创建图
     const graph = new Map();
 
-    // 生成图和入度表
     for (let [course, prereq] of prerequisites) {
         if (!graph.has(prereq)) {
             graph.set(prereq, []);
@@ -25,10 +23,8 @@ var findOrder = function (numCourses, prerequisites) {
         inDegree[course]++;
     }
 
-    // 创建队列
     const queue = [];
     const learnCoursePath = [];
-    // 将入度为0的节点加入队列
     for (let i = 0; i < numCourses; i++) {
         if (inDegree[i] === 0) {
             queue.push(i);
@@ -51,4 +47,4 @@ var findOrder = function (numCourses, prerequisites) {
     return learnCoursePath.length === numCourses ? learnCoursePath : [];
 };
 
-module.exports = findOrder;
+export default findOrder;

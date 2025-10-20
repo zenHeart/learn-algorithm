@@ -1,10 +1,10 @@
 const func = require('./index');
 const {
   createListWithArray
-} = require('../../data-structures/list/LinkedList');
+} = require('../../data-structures/02.list/LinkedList.js');
 const { expect } = require('chai');
 
-describe('longest-common-prefix', function() {
+describe('longest-common-prefix', function () {
   let testData = {
     empty: [[[], []], []],
     value1: [
@@ -16,7 +16,7 @@ describe('longest-common-prefix', function() {
     ]
   };
   for (let unitTestName in testData) {
-    it(unitTestName, function() {
+    it(unitTestName, function () {
       let data = testData[unitTestName];
 
       let l1 = createListWithArray(data[0][0]);

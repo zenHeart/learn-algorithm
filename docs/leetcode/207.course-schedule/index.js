@@ -4,6 +4,7 @@
  * @return {boolean}
  */
 var canFinish = function (numCourses, prerequisites) {
+    if (!Array.isArray(prerequisites)) return false;
     const inDegree = new Array(numCourses).fill(0);
     const adjList = new Map();
 

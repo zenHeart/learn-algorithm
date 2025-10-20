@@ -2,10 +2,10 @@ const func = require('./index');
 const { expect } = require('chai');
 const {
   createListWithArray
-} = require('../../data-structures/list/LinkedList');
+} = require('../../data-structures/02.list/LinkedList.js');
 
-describe('add two number', function() {
-  it('addTwoNumbers', function() {
+describe('add two number', function () {
+  it('addTwoNumbers', function () {
     let testData = [
       {
         input: [
