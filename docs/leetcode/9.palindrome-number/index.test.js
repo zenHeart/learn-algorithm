@@ -1,8 +1,8 @@
-const func = require('./index');
-const { expect } = require('chai');
-describe('palindrome number', function() {
+import func from './index.js';
+import { describe, it, expect } from 'vitest';
+describe('palindrome number', function () {
   let testData = {
-    "one value":  {
+    "one value": {
       input: 0,
       expect: true
     },
@@ -21,12 +21,12 @@ describe('palindrome number', function() {
   };
 
   for (let unitTestName in testData) {
-    it(unitTestName, function() {
+    it(unitTestName, function () {
       let data = testData[unitTestName];
 
       let res = func(data.input);
 
-      expect(res).to.eq(data.expect);
+      expect(res).toBe(data.expect);
     });
   }
 });

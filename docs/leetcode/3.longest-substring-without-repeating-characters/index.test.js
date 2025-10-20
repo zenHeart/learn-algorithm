@@ -1,6 +1,7 @@
-const func = require('./index');
-const { expect } = require('chai');
-describe('Longest Substring Without Repeating Characters', function() {
+import func from './index.js';
+import { describe, it, expect } from 'vitest';
+
+describe('Longest Substring Without Repeating Characters', () => {
   let testData = {
     'same charter': {
       input: 'bbbbb',
@@ -25,12 +26,10 @@ describe('Longest Substring Without Repeating Characters', function() {
   };
 
   for (let unitTestName in testData) {
-    it(unitTestName, function() {
+    it(unitTestName, () => {
       let data = testData[unitTestName];
-
       let res = func(data.input);
-
-      expect(res).to.eq(data.expect);
+      expect(res).toBe(data.expect);
     });
   }
 });

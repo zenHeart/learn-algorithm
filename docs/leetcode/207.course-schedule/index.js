@@ -43,4 +43,4 @@ var canFinish = function (numCourses, prerequisites) {
 // 该结果该返回 true 但是 返回了 false
 console.log(canFinish(3, [[1, 0], [2, 1]]));
 
-module.exports = canFinish;
+export default canFinish;

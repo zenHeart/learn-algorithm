@@ -1,5 +1,5 @@
-const func = require('./index');
-const { expect } = require('chai');
+import func from './index.js';
+import { describe, it, expect } from 'vitest';
 
 const SUITE_NAME = 'maxProfit' || func.name;
 const TEST_DATA = {
@@ -19,11 +19,11 @@ const TEST_DATA = {
 
 describe.skip(SUITE_NAME, function() {
   for (let unitTestName in TEST_DATA) {
-    it(unitTestName, function() {
+    it(unitTestName, () => {
       let data = TEST_DATA[unitTestName];
 
       let res = func.apply(this, data[0]);
-      expect(res).to.deep.eq(data[1]);
+      expect(res).toEqual(data[1]);
     });
   }
 });

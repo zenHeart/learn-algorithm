@@ -28,9 +28,9 @@ let testData = {
   }
 };
 
-describe('硬币交换测试用例', function () {
+describe('硬币交换测试用例', () => {
   for (let unitTestName in testData) {
-    it(unitTestName, function () {
+    it(unitTestName, () => {
       let data = testData[unitTestName];
       let res = coinChange(data.input[0], data.input[1]);
       expect(res).toBe(data.expect);

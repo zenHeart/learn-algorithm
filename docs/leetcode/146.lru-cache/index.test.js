@@ -1,6 +1,6 @@
 
-import LRUCache from './index.js'
-import { describe, it, expect } from 'vitest'
+import LRUCache from './index.js';
+import { describe, it, expect } from 'vitest';
 
 describe('lru test', () => {
   it('basic test', () => {

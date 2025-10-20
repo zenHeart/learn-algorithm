@@ -1,4 +1,4 @@
-module.exports = addTwoNumbers;
+export default addTwoNumbers;
 function addTwoNumbers(l1, l2) {
   let headL1 = l1;
   let headL2 = l2;

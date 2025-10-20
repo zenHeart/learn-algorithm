@@ -3,7 +3,7 @@
  * @param {number} target
  * @return {number[]}
  */
-var twoSum = function(numbers, target) {
+var twoSum = function (numbers, target) {
   let cache = {};
   for (let i = 0; i < numbers.length; i++) {
     let current = numbers[i];
@@ -18,4 +18,4 @@ var twoSum = function(numbers, target) {
   return [];
 };
 
-module.exports = twoSum;
+export default twoSum;

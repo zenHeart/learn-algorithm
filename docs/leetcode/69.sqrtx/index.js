@@ -2,7 +2,7 @@
  * @param {number} x
  * @return {number}
  */
-var mySqrt = function(x) {
+var mySqrt = function (x) {
   let res = 0;
   while (res * res < x) {
     res += 1;
@@ -13,4 +13,4 @@ var mySqrt = function(x) {
     return res;
   }
 };
-module.exports = mySqrt;
+export default mySqrt;

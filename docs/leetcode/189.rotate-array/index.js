@@ -3,7 +3,7 @@
  * @param {number} k
  * @return {void} Do not return anything, modify nums in-place instead.
  */
-var rotate = function(nums, k) {
+var rotate = function (nums, k) {
   let newArr = [];
   let len = nums.length;
   for (let i = 0; i < len; i++) {
@@ -15,4 +15,4 @@ var rotate = function(nums, k) {
     nums[i] = newArr[i];
   }
 };
-module.exports = rotate;
+export default rotate;

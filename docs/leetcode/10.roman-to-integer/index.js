@@ -14,4 +14,4 @@ let romanToInt = function a(s) {
   return res.reduce((sum, ele) => (sum += ROMA_BASE[ele]), 0);
 };
 
-module.exports = romanToInt;
+export default romanToInt;

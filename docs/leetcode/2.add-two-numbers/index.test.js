@@ -1,5 +1,5 @@
-const func = require('./index');
-const { expect } = require('chai');
+import func from './index.js';
+import { describe, it, expect } from 'vitest';
 const {
   createListWithArray
 } = require('../../data-structures/02.list/LinkedList.js');

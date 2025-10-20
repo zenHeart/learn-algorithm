@@ -2,7 +2,7 @@
  * @param {number[][]} matrix
  * @return {number[]}
  */
-var spiralOrder = function(matrix) {
+var spiralOrder = function (matrix) {
   let rowLen = matrix.length || 0;
   let colLen = (matrix[0] && matrix[0].length) || 0;
   let i = 0,
@@ -13,4 +13,4 @@ var spiralOrder = function(matrix) {
     }
   }
 };
-module.exports = spiralOrder;
+export default spiralOrder;

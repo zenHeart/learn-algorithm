@@ -1,6 +1,6 @@
-const func = require('./index');
-const { expect } = require('chai');
-describe('reverse integer', function() {
+import func from './index.js';
+import { describe, it, expect } from 'vitest';
+describe('reverse integer', () => {
   let testData = {
     'has zero': {
       input: 1200,
@@ -17,12 +17,12 @@ describe('reverse integer', function() {
   };
 
   for (let unitTestName in testData) {
-    it(unitTestName, function() {
+    it(unitTestName, () => {
       let data = testData[unitTestName];
 
       let res = func(data.input);
 
-      expect(res).to.eq(data.expect);
+      expect(res).toBe(data.expect);
     });
   }
 });

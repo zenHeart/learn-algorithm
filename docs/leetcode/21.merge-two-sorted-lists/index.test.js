@@ -1,8 +1,8 @@
-const func = require('./index');
+import func from './index.js';
 const {
   createListWithArray
 } = require('../../data-structures/02.list/LinkedList.js');
-const { expect } = require('chai');
+import { describe, it, expect } from 'vitest';
 
 describe('longest-common-prefix', function () {
   let testData = {
@@ -24,7 +24,7 @@ describe('longest-common-prefix', function () {
       let expectRes = createListWithArray(data[1]);
 
       let res = func(l1, l2);
-      expect(res).to.deep.eq(expectRes);
+      expect(res).toEqual(expectRes);
     });
   }
 });

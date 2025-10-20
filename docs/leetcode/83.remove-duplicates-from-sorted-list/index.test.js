@@ -1,5 +1,5 @@
-const func = require('./index');
-const { expect } = require('chai');
+import func from './index.js';
+import { describe, it, expect } from 'vitest';
 const {
   createListWithArray
 } = require('../../data-structures/02.list/LinkedList.js');
@@ -24,7 +24,7 @@ describe('remove-duplicates-from-sorted-list', function () {
       let expectRes = createListWithArray(data[1]);
 
       let res = func(l);
-      expect(res).to.deep.eq(expectRes);
+      expect(res).toEqual(expectRes);
     });
   }
 });

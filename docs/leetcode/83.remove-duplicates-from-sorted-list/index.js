@@ -9,7 +9,7 @@
  * @param {ListNode} head
  * @return {ListNode}
  */
-var deleteDuplicates = function(head) {
+var deleteDuplicates = function (head) {
   let moveHead = head;
   while (moveHead) {
     let current = moveHead.val;
@@ -27,4 +27,4 @@ function ListNode(val) {
   this.val = val;
   this.next = null;
 }
-module.exports = deleteDuplicates;
+export default deleteDuplicates;

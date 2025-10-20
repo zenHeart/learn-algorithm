@@ -1,7 +1,7 @@
-const func = require('./index');
-const { expect } = require('chai');
+import func from './index.js';
+import { describe, it, expect } from 'vitest';
 
-describe('rotate array', function() {
+describe('rotate array', () => {
   let testData = {
     empty: [[[], 3], []],
     value1: [
@@ -18,11 +18,11 @@ describe('rotate array', function() {
     ]
   };
   for (let unitTestName in testData) {
-    it(unitTestName, function() {
+    it(unitTestName, () => {
       let data = testData[unitTestName];
 
       func(data[0][0], data[0][1]);
-      expect(data[0][0]).to.deep.eq(data[1]);
+      expect(data[0][0]).toEqual(data[1]);
     });
   }
 });

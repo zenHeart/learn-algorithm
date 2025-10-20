@@ -2,7 +2,7 @@
  * @param {string} s
  * @return {number}
  */
-var lengthOfLongestSubstring = function(s) {
+var lengthOfLongestSubstring = function (s) {
   let longest = 0;
   for (let i = 0; i < s.length - longest; i++) {
     let subString = [];
@@ -20,4 +20,4 @@ var lengthOfLongestSubstring = function(s) {
   }
   return longest;
 };
-module.exports = lengthOfLongestSubstring;
+export default lengthOfLongestSubstring;

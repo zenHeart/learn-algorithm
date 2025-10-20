@@ -1,5 +1,5 @@
 
-import func from './index.js'
+import func from './index.js';
 import { runTestSuite } from '../utils/autoRunTest.js'
 
 const testData = {

@@ -1,5 +1,5 @@
-const func = require('./index');
-const { expect } = require('chai');
+import func from './index.js';
+import { describe, it, expect } from 'vitest';
 describe.skip('Longest Palindromic Substring', function() {
   let testData = {
     one: {
@@ -14,12 +14,12 @@ describe.skip('Longest Palindromic Substring', function() {
   };
 
   for (let unitTestName in testData) {
-    it(unitTestName, function() {
+    it(unitTestName, () => {
       let data = testData[unitTestName];
 
       let res = func(data.input);
 
-      expect(res).to.eq(data.expect);
+      expect(res).toBe(data.expect);
     });
   }
 });

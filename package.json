@@ -21,6 +21,7 @@
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:leetcode": "vitest docs/leetcode/**/*.test.js",
+    "test:leetcode:case": "vitest \"docs/leetcode/$CASEID.*/**/*.test.js\"",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "format": "prettier --write .",

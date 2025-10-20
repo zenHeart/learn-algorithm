@@ -9,7 +9,7 @@
  * @param {TreeNode} root
  * @return {number}
  */
-var maxDepth = function(root) {
+var maxDepth = function (root) {
   if (root === null) {
     return 0;
   }
@@ -32,4 +32,4 @@ function TreeNode(val) {
   this.val = val;
   this.left = this.right = null;
 }
-module.exports = maxDepth;
+export default maxDepth;

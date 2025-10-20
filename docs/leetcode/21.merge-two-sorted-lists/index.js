@@ -10,7 +10,7 @@
  * @param {ListNode} l2
  * @return {ListNode}
  */
-var mergeTwoLists = function(l1, l2) {
+var mergeTwoLists = function (l1, l2) {
   let headL1 = l1;
   let headL2 = l2;
   // 注意此处初始值必须赋值为 null 避免 leetcode 在空值时报错
@@ -49,7 +49,7 @@ function ListNode(val) {
   this.next = null;
 }
 
-module.exports = mergeTwoLists;
+export default mergeTwoLists;
 /* 
 const {
   createListWithArray

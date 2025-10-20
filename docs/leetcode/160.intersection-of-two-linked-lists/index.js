@@ -35,4 +35,4 @@ var getIntersectionNode = function (headA, headB) {
 
   return intersectHead;
 };
-module.exports = getIntersectionNode;
+export default getIntersectionNode;

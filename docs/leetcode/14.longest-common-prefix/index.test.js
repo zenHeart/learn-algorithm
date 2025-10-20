@@ -1,6 +1,6 @@
-const func = require('./index');
-const { expect } = require('chai');
-describe('longest-common-prefix', function() {
+import func from './index.js';
+import { describe, it, expect } from 'vitest';
+describe('longest-common-prefix', () => {
   let testData = [
     [[], ''],
     [['abc', 'fgh'], ''],
@@ -8,12 +8,11 @@ describe('longest-common-prefix', function() {
     [['abc'], 'abc'],
     [['abc', 'abcd'], 'abc']
   ];
-  it('test', function() {
+  it('test', () => {
     for (let data of testData) {
-      // @ts-ignore
       let res = func(data[0]);
 
-      expect(res).to.eq(data[1]);
+      expect(res).toBe(data[1]);
     }
   });
 });

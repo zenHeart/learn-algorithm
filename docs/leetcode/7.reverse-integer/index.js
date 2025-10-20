@@ -15,4 +15,4 @@ var isPalindrome = function (x) {
   }
 };
 
-module.exports = isPalindrome;
+export default isPalindrome;

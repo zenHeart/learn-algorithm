@@ -28,7 +28,7 @@ LRUCache.prototype.get = function (key) {
  * @return {void}
  */
 LRUCache.prototype.put = function (key, value) {
-  if(!this.cache[key]) {  // key 不存在
+  if (!this.cache[key]) {  // key 不存在
     if (this._index.length < this.size) {
       this._index.unshift(key);
       this.cache[key] = value;
@@ -55,4 +55,4 @@ LRUCache.prototype.put = function (key, value) {
  * obj.put(key,value)
  */
 
-module.exports = LRUCache;
+export default LRUCache;

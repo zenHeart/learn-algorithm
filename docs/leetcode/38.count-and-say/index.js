@@ -3,7 +3,7 @@
  * @return {string}
  */
 
-var countAndSay = function(n) {
+var countAndSay = function (n) {
   if (n === 1) {
     return '1';
   } else {
@@ -31,4 +31,4 @@ var countAndSay = function(n) {
   }
 };
 
-module.exports = countAndSay;
+export default countAndSay;

@@ -1,7 +1,7 @@
-const func = require('./index');
-const { expect } = require('chai');
+import func from './index.js';
+import { describe, it, expect } from 'vitest';
 
-describe('two-sum-ii-input-array-is-sorted', function() {
+describe('two-sum-ii-input-array-is-sorted', () => {
   let testData = {
     empty: [[[], 0], []],
     value1: [
@@ -18,11 +18,11 @@ describe('two-sum-ii-input-array-is-sorted', function() {
     ]
   };
   for (let unitTestName in testData) {
-    it(unitTestName, function() {
+    it(unitTestName, () => {
       let data = testData[unitTestName];
 
       let res = func(data[0][0], data[0][1]);
-      expect(res).to.deep.eq(data[1]);
+      expect(res).toEqual(data[1]);
     });
   }
 });

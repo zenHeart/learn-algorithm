@@ -25,4 +25,4 @@ var addBinary = function (a, b) {
   }
   return resStr;
 };
-module.exports = addBinary;
+export default addBinary;

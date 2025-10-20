@@ -2,7 +2,7 @@
  * @param {string} s
  * @return {number}
  */
-var lengthOfLastWord = function(s) {
+var lengthOfLastWord = function (s) {
   let lastWordLen = 0,
     back = 0;
 
@@ -18,4 +18,4 @@ var lengthOfLastWord = function(s) {
   }
   return lastWordLen || back;
 };
-module.exports = lengthOfLastWord;
+export default lengthOfLastWord;

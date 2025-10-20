@@ -2,7 +2,7 @@
  * @param {number[]} nums
  * @return {number}
  */
-var removeDuplicates = function(nums) {
+var removeDuplicates = function (nums) {
   let newIndex = 0;
   for (let i = 0; i < nums.length; i++) {
     let val = nums[i];
@@ -23,7 +23,7 @@ var removeDuplicates = function(nums) {
   }
   return newIndex;
 };
-module.exports = removeDuplicates;
+export default removeDuplicates;
 /* 
 const {
   createListWithArray

@@ -12,10 +12,10 @@ var longestPalindrome = function (s) {
       if (
         currentRes.length > longest.length &&
         currentRes.join("") ===
-          currentRes
-            .slice()
-            .reverse()
-            .join("")
+        currentRes
+          .slice()
+          .reverse()
+          .join("")
       ) {
         longest = currentRes.slice();
       }
@@ -24,4 +24,4 @@ var longestPalindrome = function (s) {
   return longest.join("");
 };
 
-module.exports = longestPalindrome;
+export default longestPalindrome;

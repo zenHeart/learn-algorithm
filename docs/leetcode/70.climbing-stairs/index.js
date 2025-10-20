@@ -16,4 +16,4 @@ var climbStairs = function step(n) {
     return cache[n];
   }
 };
-module.exports = climbStairs;
+export default climbStairs;

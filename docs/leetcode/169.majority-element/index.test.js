@@ -1,5 +1,5 @@
-const func = require('./index');
-const { expect } = require('chai');
+import func from './index.js';
+import { describe, it, expect } from 'vitest';
 
 describe.skip('majority element', function() {
   let testData = {
@@ -18,11 +18,11 @@ describe.skip('majority element', function() {
     ]
   };
   for (let unitTestName in testData) {
-    it(unitTestName, function() {
+    it(unitTestName, () => {
       let data = testData[unitTestName];
 
       func(data[0][0], data[0][1]);
-      expect(data[0][0]).to.deep.eq(data[1]);
+      expect(data[0][0]).toEqual(data[1]);
     });
   }
 });

@@ -3,7 +3,7 @@
  * @param {number} val
  * @return {number}
  */
-var removeElement = function(nums, val) {
+var removeElement = function (nums, val) {
   let newIndex = 0;
   for (let i = 0; i < nums.length; i++) {
     let currentVal = nums[i];
@@ -14,7 +14,7 @@ var removeElement = function(nums, val) {
   }
   return newIndex;
 };
-module.exports = removeElement;
+export default removeElement;
 /* 
 const {
   createListWithArray

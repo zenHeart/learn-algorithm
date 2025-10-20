@@ -6,7 +6,7 @@
  * @return {void} Do not return anything, modify nums1 in-place instead.
  */
 let MIN = Number.MIN_VALUE;
-var merge = function(nums1, m, nums2, n) {
+var merge = function (nums1, m, nums2, n) {
   let i = 0;
   let j = 0;
   while (i < m || j < n) {
@@ -21,4 +21,4 @@ var merge = function(nums1, m, nums2, n) {
     }
   }
 };
-module.exports = merge;
+export default merge;

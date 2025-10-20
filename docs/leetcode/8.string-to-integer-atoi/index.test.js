@@ -1,6 +1,6 @@
-const func = require('./index');
-const { expect } = require('chai');
-describe('string to atoi', function() {
+import func from './index.js';
+import { describe, it, expect } from 'vitest';
+describe('string to atoi', () => {
   let testData = {
     null1: {
       input: '',
@@ -37,12 +37,12 @@ describe('string to atoi', function() {
   };
 
   for (let unitTestName in testData) {
-    it(unitTestName, function() {
+    it(unitTestName, () => {
       let data = testData[unitTestName];
 
       let res = func(data.input);
 
-      expect(res).to.eq(data.expect);
+      expect(res).toBe(data.expect);
     });
   }
 });

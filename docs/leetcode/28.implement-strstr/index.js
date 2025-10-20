@@ -3,7 +3,7 @@
  * @param {string} needle
  * @return {number}
  */
-var strStr = function(haystack, needle) {
+var strStr = function (haystack, needle) {
   // 为空字节返回 0
   if (!needle) {
     return 0;
@@ -21,4 +21,4 @@ var strStr = function(haystack, needle) {
   }
   return -1;
 };
-module.exports = strStr;
+export default strStr;

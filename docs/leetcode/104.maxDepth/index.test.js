@@ -1,7 +1,7 @@
-const func = require('./index');
-const { expect } = require('chai');
+import func from './index.js';
+import { expect } from 'vitest';
 
-describe.skip('max-depth', function() {
+describe.skip('max-depth', function () {
   let testData = {
     empty: [
       [
@@ -16,7 +16,7 @@ describe.skip('max-depth', function() {
     ]
   };
   for (let unitTestName in testData) {
-    it(unitTestName, function() {
+    it(unitTestName, function () {
       let data = testData[unitTestName];
 
       let res = func(data[0][0], data[0][1], data[0][2], data[0][3]);

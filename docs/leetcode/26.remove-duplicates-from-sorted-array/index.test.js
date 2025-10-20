@@ -1,17 +1,17 @@
-const func = require('./index');
-const { expect } = require('chai');
+import func from './index.js';
+import { describe, it, expect } from 'vitest';
 
-describe('longest-common-prefix', function() {
+describe('longest-common-prefix', () => {
   let testData = {
     empty: [[], 0],
     value1: [[0, 0, 1, 1, 2, 2], 3]
   };
   for (let unitTestName in testData) {
-    it(unitTestName, function() {
+    it(unitTestName, () => {
       let data = testData[unitTestName];
 
       let res = func(data[0]);
-      expect(res).to.deep.eq(data[1]);
+      expect(res).toEqual(data[1]);
     });
   }
 });

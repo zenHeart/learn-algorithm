@@ -3,7 +3,7 @@
  * @param {number} target
  * @return {number[]}
  */
-module.exports = twoSum;
+export default twoSum;
 function twoSum(nums, target) {
   let res = {};
   for (let i = 0; i < nums.length; i++) {

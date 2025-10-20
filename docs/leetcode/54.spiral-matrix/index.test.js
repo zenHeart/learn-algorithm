@@ -1,5 +1,5 @@
-const func = require('./index');
-const { expect } = require('chai');
+import func from './index.js';
+import { describe, it, expect } from 'vitest';
 
 describe.skip('实现 strStr()', function() {
   let testData = {
@@ -13,11 +13,11 @@ describe.skip('实现 strStr()', function() {
     ]
   };
   for (let unitTestName in testData) {
-    it(unitTestName, function() {
+    it(unitTestName, () => {
       let data = testData[unitTestName];
 
       let res = func(data[0]);
-      expect(res).to.deep.eq(data[1]);
+      expect(res).toEqual(data[1]);
     });
   }
 });

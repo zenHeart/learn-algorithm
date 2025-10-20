@@ -1,6 +1,7 @@
-const func = require('./index');
-const { expect } = require('chai');
-describe('longest-common-prefix', function() {
+import func from './index.js';
+import { describe, it, expect } from 'vitest';
+
+describe('valid-parentheses', () => {
   let testData = {
     empty: ['', true],
     empty1: ['()', true],
@@ -11,12 +12,10 @@ describe('longest-common-prefix', function() {
     empty6: ['({[]})', true]
   };
   for (let unitTestName in testData) {
-    it(unitTestName, function() {
+    it(unitTestName, () => {
       let data = testData[unitTestName];
-      // @ts-ignore
       let res = func(data[0]);
-
-      expect(res).to.eq(data[1]);
+      expect(res).toBe(data[1]);
     });
   }
 });

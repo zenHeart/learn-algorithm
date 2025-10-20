@@ -1,7 +1,7 @@
-const func = require('./index');
-const { expect } = require('chai');
+import func from './index.js';
+import { describe, it, expect } from 'vitest';
 
-describe('climbStairs', function() {
+describe('climbStairs', () => {
   let testData = {
     value1: [1, 1],
     value2: [2, 2],
@@ -9,11 +9,11 @@ describe('climbStairs', function() {
     value4: [45, 1836311903]
   };
   for (let unitTestName in testData) {
-    it(unitTestName, function() {
+    it(unitTestName, () => {
       let data = testData[unitTestName];
 
       let res = func(data[0]);
-      expect(res).to.eq(data[1]);
+      expect(res).toBe(data[1]);
     });
   }
 });

@@ -10,7 +10,7 @@
  * @param {TreeNode} q
  * @return {boolean}
  */
-var isSameTree = function(p, q) {
+var isSameTree = function (p, q) {
   let queeP = [p];
   let queeQ = [q];
   while (queeP.length || queeQ.length) {
@@ -31,4 +31,4 @@ function TreeNode(val) {
   this.val = val;
   this.left = this.right = null;
 }
-module.exports = isSameTree;
+export default isSameTree;

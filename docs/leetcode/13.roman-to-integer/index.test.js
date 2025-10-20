@@ -11,7 +11,7 @@ describe.skip("reverse integer", function () {
     for (let data of testData) {
       let res = func(data[0]);
 
-      expect(res).to.eq(data[1]);
+      expect(res).toBe(data[1]);
     }
   });
 });

@@ -1,7 +1,7 @@
-const func = require('./index');
-const { expect } = require('chai');
+import func from './index.js';
+import { describe, it, expect } from 'vitest';
 
-describe('sqrtx', function() {
+describe('sqrtx', () => {
   let testData = {
     empty: [0, 0],
     value1: [1, 1],
@@ -13,11 +13,11 @@ describe('sqrtx', function() {
     value7: [1041080284, 32265]
   };
   for (let unitTestName in testData) {
-    it(unitTestName, function() {
+    it(unitTestName, () => {
       let data = testData[unitTestName];
 
       let res = func(data[0]);
-      expect(res).to.eq(data[1]);
+      expect(res).toBe(data[1]);
     });
   }
 });

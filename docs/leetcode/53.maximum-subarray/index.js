@@ -3,7 +3,7 @@
  * @return {number}
  */
 let MIN = -2147483648;
-var maxSubArray = function(nums) {
+var maxSubArray = function (nums) {
   let resMax = MIN;
   for (let i = 0; i < nums.length; i++) {
     let currentMax = MIN;
@@ -20,4 +20,4 @@ var maxSubArray = function(nums) {
   }
   return resMax;
 };
-module.exports = maxSubArray;
+export default maxSubArray;

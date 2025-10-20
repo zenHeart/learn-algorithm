@@ -51,4 +51,4 @@ var cloneGraph = function (node) {
 // console.dir(cloneGraph(graph[0]), { depth: null })
 
 
-module.exports = cloneGraph;
+export default cloneGraph;

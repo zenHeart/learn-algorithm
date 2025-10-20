@@ -3,7 +3,7 @@
  * @param {number} target
  * @return {number}
  */
-var searchInsert = function(nums, target) {
+var searchInsert = function (nums, target) {
   let i;
   for (i = 0; i < nums.length; i++) {
     let current = nums[i];
@@ -18,4 +18,4 @@ var searchInsert = function(nums, target) {
   return i;
 };
 
-module.exports = searchInsert;
+export default searchInsert;

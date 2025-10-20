@@ -1,26 +1,15 @@
-const func = require('./index');
-const { expect } = require('chai');
+import MinStack from './index.js';
+import { describe, it, expect } from 'vitest';
 
-describe.skip('remove-duplicates-from-sorted-list', function() {
-  let testData = {
-    empty: [
-      [
-        [1, 2, 3, 0, 0, 0],
-        [2, 5, 6]
-      ],
-      [1, 2, 2, 3, 5, 6]
-    ],
-    value1: [
-      [[1, 2, 3, 0, 0, 0], 3, [2, 5, 6], 3],
-      [1, 2, 2, 3, 5, 6]
-    ]
-  };
-  for (let unitTestName in testData) {
-    it(unitTestName, function() {
-      let data = testData[unitTestName];
-
-      let res = func(data[0][0], data[0][1], data[0][2], data[0][3]);
-      expect(res).to.deep.eq(data[1]);
-    });
-  }
+describe.skip('min-stack', () => {
+  it('basic test', () => {
+    let minStack = new MinStack();
+    minStack.push(-2);
+    minStack.push(0);
+    minStack.push(-3);
+    expect(minStack.getMin()).toBe(-3);
+    minStack.pop();
+    expect(minStack.top()).toBe(0);
+    expect(minStack.getMin()).toBe(-2);
+  });
 });

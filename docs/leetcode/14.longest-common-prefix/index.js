@@ -2,7 +2,7 @@
  * @param {string[]} strs
  * @return {string}
  */
-var longestCommonPrefix = function(strs) {
+var longestCommonPrefix = function (strs) {
   // 数组为空直接返回
   if (strs.length === 0) {
     return '';
@@ -30,4 +30,4 @@ var longestCommonPrefix = function(strs) {
   return res;
 };
 
-module.exports = longestCommonPrefix;
+export default longestCommonPrefix;

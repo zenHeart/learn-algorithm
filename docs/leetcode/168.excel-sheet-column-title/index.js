@@ -2,7 +2,7 @@
  * @param {number} n
  * @return {string}
  */
-var convertToTitle = function(n) {
+var convertToTitle = function (n) {
   let backN = n;
   let res = '';
   while (backN / 26 > 1) {
@@ -16,4 +16,4 @@ var convertToTitle = function(n) {
   return res;
 };
 
-module.exports = convertToTitle;
+export default convertToTitle;
