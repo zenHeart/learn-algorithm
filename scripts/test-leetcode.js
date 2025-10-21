@@ -41,9 +41,10 @@ const matchingDirs = directories.filter(dir => {
    const dirNumber = dir.split('.')[0];
    return dirNumber === testNumber || dir.startsWith(testNumber + '.');
 }).filter(dir => {
-   // 只包含有测试文件的目录
-   const testFile = path.join(leetcodeDir, dir, 'index.test.js');
-   return fs.existsSync(testFile);
+   // 只包含有测试文件的目录，支持 .js 和 .ts 格式
+   const testFileJs = path.join(leetcodeDir, dir, 'index.test.js');
+   const testFileTs = path.join(leetcodeDir, dir, 'index.test.ts');
+   return fs.existsSync(testFileJs) || fs.existsSync(testFileTs);
 });
 
 if (matchingDirs.length === 0) {
@@ -69,8 +70,8 @@ matchingDirs.forEach(dir => {
    console.log(`  📁 ${dir}`);
 });
 
-// 构建测试命令
-const testPatterns = matchingDirs.map(dir => `docs/leetcode/${dir}/*.test.js`);
+// 构建测试命令，支持 .js 和 .ts 测试文件
+const testPatterns = matchingDirs.map(dir => `docs/leetcode/${dir}/*.test.{js,ts}`);
 const testCommand = `vitest ${testPatterns.join(' ')}`;
 
 console.log(`\n🚀 运行测试命令: ${testCommand}\n`);

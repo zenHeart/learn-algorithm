@@ -7,11 +7,13 @@
 ## 可用命令
 
 ### 1. 运行所有 LeetCode 测试
+
 ```bash
 pnpm test:leetcode
 ```
 
 ### 2. 运行指定编号的题目测试
+
 ```bash
 # 使用完整命令名
 pnpm test:leetcode:run <编号>
@@ -23,6 +25,7 @@ pnpm test:l <编号>
 ## 使用示例
 
 ### 运行单个题目
+
 ```bash
 # 运行第 1 题（Two Sum）
 pnpm test:l 1
@@ -35,12 +38,14 @@ pnpm test:l 322
 ```
 
 ### 运行多个相同编号的题目
+
 ```bash
 # 运行所有第 100 题（Same Tree 和 Symmetric Tree）
 pnpm test:l 100
 ```
 
 ### 查看可用题目
+
 ```bash
 # 运行不存在的编号会显示所有可用题目
 pnpm test:l 999
