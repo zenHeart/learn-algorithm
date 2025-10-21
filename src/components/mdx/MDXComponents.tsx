@@ -286,10 +286,10 @@ export const mdxComponents = {
       : props.children
     if (
       React.isValidElement(child) &&
-      typeof child.props?.className === 'string' &&
-      child.props.className.includes('language-playground')
+  typeof (child.props as any)?.className === 'string' &&
+  ((child.props as any).className as string).includes('language-playground')
     ) {
-      const raw = extractTextFromNode(child.props.children)
+  const raw = extractTextFromNode((child.props as any).children)
       const cfg = parsePlaygroundConfig(raw || '')
       return <Playground {...cfg} />
     }

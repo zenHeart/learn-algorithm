@@ -58,10 +58,18 @@ function toFileTree(
       const isFile = i === segments.length - 1
       if (isFile) {
         // 内容将在外层加载后注入
-        current[s] = { file: { contents: '' } }
+        if (typeof s === 'string') {
+          ;(current as Record<string, any>)[s] = { file: { contents: '' } }
+        }
       } else {
-        current[s] = current[s] || { directory: {} }
-        current = current[s].directory
+        if (typeof s === 'string') {
+          ;(current as Record<string, any>)[s] = (
+            current as Record<string, any>
+          )[s] || { directory: {} }
+        }
+        if (typeof s === 'string') {
+          current = (current as Record<string, any>)[s].directory
+        }
       }
     }
   }

@@ -44,7 +44,7 @@ export function parsePlaygroundConfig(code: string): PlaygroundProps {
 
   while (i < lines.length) {
     const raw = lines[i]
-    const line = raw.replace(/\t/g, '    ')
+    const line = (raw ?? '').replace(/\t/g, '    ')
     const trimmed = line.trim()
     i++
 
@@ -96,7 +96,7 @@ export function parsePlaygroundConfig(code: string): PlaygroundProps {
     if (inFiles) {
       const itemMatch = trimmed.match(/^-(\s+)(.+)$/)
       if (itemMatch) {
-        const afterDash = itemMatch[2].trim()
+        const afterDash = (itemMatch?.[2] ?? '').trim()
         // 形如: '- "./path"' 或 '- ./path'
         if (!afterDash.endsWith(':')) {
           files.push({ path: trimQuotes(afterDash) })
@@ -110,7 +110,7 @@ export function parsePlaygroundConfig(code: string): PlaygroundProps {
         // 消费随后的缩进行（属性）
         while (i < lines.length) {
           const propRaw = lines[i]
-          const propLine = propRaw.replace(/\t/g, '    ')
+          const propLine = (propRaw ?? '').replace(/\t/g, '    ')
           const propTrim = propLine.trim()
           if (!propLine.startsWith('    ') && !propLine.startsWith('  ')) break
           i++
@@ -140,7 +140,9 @@ export function parsePlaygroundConfig(code: string): PlaygroundProps {
       if (!kv) continue
       const k = kv[1]
       const v = parseScalar(kv[2] || '')
-      ;(options as any)[k] = v
+      if (typeof k === 'string') {
+        ;(options as Record<string, any>)[k] = v
+      }
     }
   }
 

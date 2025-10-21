@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { runInWebContainer } from './webcontainerRunner'
 import { listDocDirFiles, resolveDocFiles } from './docFileResolver'
 import { CodeEditor } from './CodeEditor'
@@ -89,8 +89,8 @@ export function Playground(props: PlaygroundProps) {
       const minLen = Math.min(...segsArr.map(a => a.length))
       const common: string[] = []
       for (let i = 0; i < minLen; i++) {
-        const v = segsArr[0][i]
-        if (segsArr.every(a => a[i] === v)) common.push(v)
+  const v = segsArr[0]?.[i]
+  if (typeof v === 'string' && segsArr.every(a => a[i] === v)) common.push(v)
         else break
       }
       root = common.join('/')
@@ -171,7 +171,7 @@ export function Playground(props: PlaygroundProps) {
           return { ...it, path: p, name: getTabName(normalizedPaths, p) }
         })
         // 初次设置 activePath
-        if (!activePath && mapped.length) setActivePath(mapped[0].path)
+  if (!activePath && mapped.length) setActivePath(mapped[0]?.path ?? '')
         return mapped
       })
 

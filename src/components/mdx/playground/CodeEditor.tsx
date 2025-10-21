@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { EditorView } from '@codemirror/view'
 import { javascript } from '@codemirror/lang-javascript'
 import { oneDark } from '@codemirror/theme-one-dark'
@@ -20,7 +20,7 @@ export function CodeEditor({
 }: CodeEditorProps) {
   const hostRef = useRef<HTMLDivElement | null>(null)
   const viewRef = useRef<EditorView | null>(null)
-  const onChangeRef = useRef<CodeEditorProps['onChange']>()
+  const onChangeRef = useRef<CodeEditorProps['onChange'] | null>(null)
   onChangeRef.current = onChange
 
   useEffect(() => {
