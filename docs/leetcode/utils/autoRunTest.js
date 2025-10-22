@@ -38,4 +38,23 @@ export function runTestSuite(testSuites) {
    }
 }
 
+export function arrayToList(arr) {
+   let head
+   for (let i = 0; i < arr.length; i++) {
+      const val = arr[i]
+      const node = {
+         val,
+         next: null
+      }
+      if (i === 0) {
+         head = node
+         moveP = head
+      } else {
+         moveP.next = node
+         moveP = node
+      }
+   }
+   return head
+}
+
 export default runTestSuite;
