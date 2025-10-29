@@ -11,6 +11,36 @@
  * @return {ListNode}
  */
 var mergeTwoLists = function (l1, l2) {
+  let node = {
+    next: null
+  }
+  let dummyHead = node;
+
+  while (l1 || l2) {
+    let val1 = l1 ? l1.val : Infinity;
+    let val2 = l2 ? l2.val : Infinity;
+    if (val1 < val2) {
+      node.next = {
+        val: val1,
+        next: null
+      }
+      node = node.next;
+      l1 = l1.next;
+    } else {
+      node.next = {
+        val: val2,
+        next: null
+      }
+      node = node.next;
+      l2 = l2.next;
+    }
+  }
+
+  return dummyHead.next
+
+};
+
+var mergeTwoListsV0 = function (l1, l2) {
   let headL1 = l1;
   let headL2 = l2;
   // 注意此处初始值必须赋值为 null 避免 leetcode 在空值时报错
@@ -44,6 +74,7 @@ var mergeTwoLists = function (l1, l2) {
   }
   return resHead;
 };
+
 function ListNode(val) {
   this.val = val;
   this.next = null;
