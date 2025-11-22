@@ -24,6 +24,7 @@
     "test:leetcode:case": "node scripts/test-leetcode.js $CASEID",
     "test:leetcode:run": "node scripts/test-leetcode.js",
     "test:l": "node scripts/test-leetcode.js",
+    "lc": "node scripts/leetcode.js",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "format": "prettier --write .",
