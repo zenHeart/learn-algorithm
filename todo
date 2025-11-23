@@ -23,3 +23,9 @@ backlog:
 资料:
   ☐ 慕课视频 https://coding.imooc.com/class/82.html
   ☐ 只有根节点是满二叉树么
+
+
+前端算法:
+	☐ AABB Collision (AABB 碰撞检测) 你去搜索 "JS AABB Collision Detection"，看几篇文章，你就彻底通透了。
+	☐ Ray Casting (射线投射) 当你需要判断鼠标是否点击中了一个不规则图形时，会用到这个。这是几何思维的进阶。
+	☐ Quadtree (四叉树) 当你屏幕上有 1000 个矩形，如何快速找出哪些重叠了？这是矩形面积问题在大数据量下的“工程解法”。
