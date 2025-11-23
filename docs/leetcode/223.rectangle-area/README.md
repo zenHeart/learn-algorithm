@@ -1,3 +1,9 @@
+---
+tags:
+  - 几何
+  - 数学
+---
+
 # [矩形面积](https://leetcode.cn/problems/rectangle-area/description/)
 
 ## 题目描述

@@ -46,7 +46,11 @@ async function main() {
          titleSlug,
          translatedTitle,
          translatedContent,
-         codeSnippets
+         codeSnippets,
+         topicTags,
+         jsonExampleTestcases,
+         metaData: metaDataStr,
+         content
       } = questionData;
 
       console.log(`Found question: ${questionFrontendId}. ${titleSlug}`);
@@ -55,17 +59,22 @@ async function main() {
 
       if (fs.existsSync(targetDir)) {
          console.log(`Directory ${targetDir} already exists. Skipping...`);
-         return;
+         // We might want to update files, but for now let's stick to skipping or maybe just warn
+         // return; 
+      } else {
+         fs.mkdirSync(targetDir, { recursive: true });
       }
 
-      fs.mkdirSync(targetDir, { recursive: true });
+      // --- Generate README.md ---
+      const tags = (topicTags || []).map(t => t.translatedName || t.name);
+      const yamlFrontmatter = tags.length > 0
+         ? `---\ntags:\n${tags.map(t => `  - ${t}`).join('\n')}\n---\n\n`
+         : '';
 
-      // Create README.md
-      const readmeContent = `# [${translatedTitle}](${url})\n\n## 题目描述\n\n${translatedContent}\n\n## 解题思路\n\n<!-- TODO: Add solution explanation -->\n`;
+      const readmeContent = `${yamlFrontmatter}# [${translatedTitle}](${url})\n\n## 题目描述\n\n${translatedContent}\n\n## 解题思路\n\n<!-- TODO: Add solution explanation -->\n`;
       fs.writeFileSync(path.join(targetDir, 'README.md'), readmeContent);
 
-      // Create index.js
-      // Try to find JavaScript snippet
+      // --- Generate index.js ---
       const jsSnippet = codeSnippets?.find(s => s.langSlug === 'javascript')?.code ||
          `/**
  * @param {number} x
@@ -79,28 +88,96 @@ var solution = function(x) {
 
       // Simple heuristic to add export default
       const funcNameMatch = jsSnippet.match(/var\s+(\w+)\s*=|function\s+(\w+)\s*\(/);
+      const funcName = funcNameMatch ? (funcNameMatch[1] || funcNameMatch[2]) : 'solution';
+
       if (funcNameMatch) {
-         const funcName = funcNameMatch[1] || funcNameMatch[2];
          indexJsContent += `export default ${funcName};\n`;
       } else {
          indexJsContent += `export default solution;\n`;
       }
 
-      fs.writeFileSync(path.join(targetDir, 'index.js'), indexJsContent);
+      if (!fs.existsSync(path.join(targetDir, 'index.js'))) {
+         fs.writeFileSync(path.join(targetDir, 'index.js'), indexJsContent);
+      }
 
-      // Create index.test.js
+      // --- Generate index.test.js ---
+      let testDataObj = {};
+      try {
+         const metaData = JSON.parse(metaDataStr);
+         const inputs = JSON.parse(jsonExampleTestcases || '[]');
+
+         // Try to extract expected outputs from content
+         // Regex to find "Output:</strong> <value>" or "Output: <value>"
+         // This is heuristic and might fail for complex outputs
+         const outputMatches = [...content.matchAll(/Output:?<\/strong>\s*([^<]+)/g)];
+
+         inputs.forEach((inputStr, index) => {
+            // inputStr is like "-3\n0\n..."
+            // We need to parse each line as a value
+            const inputValues = inputStr.split('\n').map(val => {
+               try {
+                  return JSON.parse(val);
+               } catch {
+                  return val;
+               }
+            });
+
+            let expectedValue = null;
+            if (outputMatches[index]) {
+               const outputStr = outputMatches[index][1].trim();
+               try {
+                  expectedValue = JSON.parse(outputStr);
+               } catch {
+                  expectedValue = outputStr;
+               }
+            }
+
+            testDataObj[`示例 ${index + 1}`] = {
+               input: inputValues,
+               expect: expectedValue
+            };
+         });
+
+      } catch (e) {
+         console.warn('Error parsing test cases:', e);
+         testDataObj = {
+            '示例 1': {
+               input: [],
+               expect: null
+            }
+         };
+      }
+
+      // Format testData object to string, handling arrays and objects nicely
+      const formatValue = (val) => JSON.stringify(val);
+
+      let testDataCode = 'let testData = {\n';
+      for (const [key, val] of Object.entries(testDataObj)) {
+         testDataCode += `  "${key}": {\n`;
+         testDataCode += `    input: ${formatValue(val.input)},\n`;
+         testDataCode += `    expect: ${formatValue(val.expect)}\n`;
+         testDataCode += `  },\n`;
+      }
+      testDataCode += '};\n';
+
       const testContent = `import { describe, it, expect } from 'vitest';
-import solution from './index';
+import ${funcName} from './index';
+
+${testDataCode}
 
 describe('${questionFrontendId}. ${translatedTitle}', () => {
-  it('should pass sample tests', () => {
-    // expect(solution(...)).toBe(...);
-  });
+  for (let unitTestName in testData) {
+    it(unitTestName, () => {
+      let data = testData[unitTestName];
+      let res = ${funcName}(...data.input);
+      expect(res).toEqual(data.expect);
+    });
+  }
 });
 `;
       fs.writeFileSync(path.join(targetDir, 'index.test.js'), testContent);
 
-      console.log(`Successfully created ${targetDir}`);
+      console.log(`Successfully processed ${targetDir}`);
 
    } catch (error) {
       console.error('Error:', error);
