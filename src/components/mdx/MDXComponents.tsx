@@ -1,6 +1,10 @@
 import React from 'react'
 import { Playground } from './playground/Playground'
 import { parsePlaygroundConfig } from './playground/parser'
+import { ArraySortViz } from './playground/visualization/ArraySortViz'
+import { BinarySearchViz } from './playground/visualization/BinarySearchViz'
+import { BinaryTreeViz } from './playground/visualization/BinaryTreeViz'
+import { LinkedListViz } from './playground/visualization/LinkedListViz'
 
 // 定义组件 props 类型
 interface CodeBlockProps {
@@ -318,6 +322,12 @@ export const mdxComponents = {
 
   // 自定义组件
   InfoBox,
+
+  // P1 基础可视化组件（数组 / 链表 / 树 / 搜索）
+  ArraySortViz,
+  BinarySearchViz,
+  BinaryTreeViz,
+  LinkedListViz,
 
   // YAML 前置内容样式处理
   section: (props: ComponentProps) => (
