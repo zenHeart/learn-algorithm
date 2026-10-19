@@ -106,3 +106,6 @@ Thumbs.db
 .vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# 手写类型声明（非构建生成物）
+!docs/data-structures/99.visualization/*.d.ts
