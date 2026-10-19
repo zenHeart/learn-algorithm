@@ -72,9 +72,9 @@ O(1) < O(log n) < O(n) < O(n log n) < O(n²) < O(n³) < O(2ⁿ) < O(n!)
 #### 主定理 (Master Theorem)
 ```
 T(n) = aT(n/b) + f(n)
-- 如果 f(n) = O(n^log_b(a-ε)), 则 T(n) = Θ(n^log_b(a))
-- 如果 f(n) = Θ(n^log_b(a)), 则 T(n) = Θ(n^log_b(a) log n)
-- 如果 f(n) = Ω(n^log_b(a+ε)), 则 T(n) = Θ(f(n))
+- 如果存在 ε>0 使 f(n) = O(n^{log_b(a)-ε})，则 T(n) = Θ(n^{log_b(a)})
+- 如果 f(n) = Θ(n^{log_b(a)})，则 T(n) = Θ(n^{log_b(a)} log n)
+- 如果存在 ε>0 使 f(n) = Ω(n^{log_b(a)+ε})，且存在常数 c<1 使 a·f(n/b) ≤ c·f(n)（正则条件），则 T(n) = Θ(f(n))
 ```
 
 ### 4. LeetCode 经典题目
